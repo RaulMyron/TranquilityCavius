@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TRANQUILITY CLAVIUS | Admission Terminal</title>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <title>TRANQUILITY CLAVIUS | Seu Novo Amanhã</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #050509;
-            --terminal-green: #00ff41; /* Fallback green */
+            --bg-dark: #020205; /* Fundo quase preto, absoluto */
             --cyber-purple: #bc13fe;   /* Neon Purple */
-            --cyber-cyan: #00e5ff;     /* Neon Cyan details */
-            --text-main: #e0e0e0;
-            --overlay-red: rgba(255, 0, 0, 0.15);
+            --cyber-cyan: #00e5ff;     /* Neon Cyan detalhes */
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
+            --accent-gold: #d4af37;    /* Ouro da luxúria */
+            --overlay-transition: rgba(188, 19, 254, 0.1);
         }
 
         * { box-sizing: border-box; }
@@ -21,25 +22,25 @@
             margin: 0;
             padding: 0;
             background-color: var(--bg-dark);
-            font-family: 'VT323', monospace; /* Fonte de Terminal */
+            font-family: 'Montserrat', sans-serif;
             color: var(--text-main);
             height: 100%;
             overflow: hidden; /* Impede scroll na página inteira */
             transition: background-color 2s ease;
         }
 
-        /* Efeito de Scanline e Glitch - Retrofuturismo */
+        /* Efeito de Scanline e Glitch Suave - Retrofuturismo */
         body::before {
             content: " ";
             display: block;
             position: fixed;
             top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
-                        linear-gradient(90deg, rgba(188, 19, 254, 0.03), rgba(0, 229, 255, 0.02), rgba(255, 0, 0, 0.02));
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.08) 50%), 
+                        linear-gradient(90deg, rgba(188, 19, 254, 0.02), rgba(0, 229, 255, 0.01), rgba(212, 175, 55, 0.01));
             z-index: 10;
             background-size: 100% 4px, 3px 100%;
             pointer-events: none;
-            opacity: 0.6;
+            opacity: 0.5;
         }
 
         .main-wrapper {
@@ -48,137 +49,118 @@
             justify-content: center;
             align-items: center;
             height: 100dvh; /* Dynamic viewport height for mobile */
-            padding: 20px;
+            padding: 30px;
             position: relative;
             z-index: 5;
         }
 
         header {
             width: 100%;
-            max-width: 600px;
-            text-align: left;
-            margin-bottom: 30px;
-            border-left: 3px solid var(--cyber-purple);
-            padding-left: 15px;
+            max-width: 650px;
+            text-align: center;
+            margin-bottom: 40px;
         }
 
         h1 {
             font-family: 'Orbitron', sans-serif;
-            letter-spacing: 4px;
-            font-size: 1.5rem;
+            letter-spacing: 6px;
+            font-size: 1.8rem;
             margin: 0;
-            color: var(--cyber-cyan);
-            text-shadow: 0 0 10px var(--cyber-cyan);
+            color: var(--text-main);
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
 
-        @media (max-width: 480px) { h1 { font-size: 1.2rem; letter-spacing: 2px; } }
+        @media (max-width: 480px) { h1 { font-size: 1.4rem; letter-spacing: 3px; } }
 
         .status-bar {
-            font-size: 0.9rem;
+            font-size: 0.7rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             color: var(--cyber-purple);
-            margin-top: 8px;
+            margin-top: 10px;
             opacity: 0.8;
         }
 
-        .terminal-container {
+        .invitation-container {
             width: 100%;
-            max-width: 600px;
-            background: rgba(10, 10, 20, 0.6);
+            max-width: 650px;
+            background: rgba(10, 10, 20, 0.7);
             border: 1px solid rgba(188, 19, 254, 0.3);
-            padding: 30px;
-            box-shadow: 0 0 30px rgba(188, 19, 254, 0.1);
+            padding: 40px;
+            box-shadow: 0 0 40px rgba(188, 19, 254, 0.15);
             position: relative;
-            /* Recorte angular Cybertech */
-            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+            backdrop-filter: blur(10px);
+            /* Recorte angular Cybertech mais sutil */
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 0 100%);
         }
 
-        @media (max-width: 480px) { .terminal-container { padding: 20px; } }
-
-        .terminal-header {
-            font-size: 0.8rem;
-            color: var(--cyber-cyan);
-            margin-bottom: 15px;
-            border-bottom: 1px solid rgba(0, 229, 255, 0.2);
-            padding-bottom: 5px;
-        }
+        @media (max-width: 480px) { .invitation-container { padding: 25px; } }
 
         .hero-text {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 25px;
+            font-size: 1.3rem;
+            line-height: 1.5;
+            margin-bottom: 30px;
+            font-weight: 200;
             letter-spacing: 1px;
         }
 
-        @media (max-width: 480px) { .hero-text { font-size: 1rem; } }
+        @media (max-width: 480px) { .hero-text { font-size: 1.1rem; } }
 
-        .invitation-details {
-            font-size: 0.95rem;
-            opacity: 0.9;
-            border-left: 2px solid rgba(188, 19, 254, 0.5);
-            padding-left: 15px;
-            margin: 20px 0;
+        .luxe-details {
+            font-size: 1rem;
+            color: var(--text-muted);
+            border-left: 2px solid var(--accent-gold);
+            padding-left: 20px;
+            margin: 30px 0;
+            line-height: 1.7;
         }
 
         .highlight-gold {
-            color: #d4af37; /* Mantendo o ouro para o contrato/luxo */
-            font-weight: bold;
-        }
-
-        .glitch-text {
-            color: var(--cyber-purple);
-            animation: textGlitch 5s infinite;
+            color: var(--accent-gold);
+            font-weight: 700;
+            text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
         }
 
         .button {
             display: inline-block;
             width: 100%;
-            margin-top: 30px;
-            padding: 15px;
+            margin-top: 35px;
+            padding: 18px;
             background: none;
-            border: 2px solid var(--cyber-cyan);
-            color: var(--cyber-cyan);
+            border: 2px solid var(--cyber-purple);
+            color: var(--cyber-purple);
             font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem;
-            letter-spacing: 3px;
+            font-size: 1rem;
+            letter-spacing: 4px;
             text-transform: uppercase;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
             cursor: pointer;
-            text-shadow: 0 0 5px var(--cyber-cyan);
-            box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+            text-shadow: 0 0 8px var(--cyber-purple);
+            box-shadow: 0 0 15px rgba(188, 19, 254, 0.2);
         }
 
         .button:hover {
-            background-color: var(--cyber-cyan);
+            background-color: var(--cyber-purple);
             color: var(--bg-dark);
-            box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+            box-shadow: 0 0 25px rgba(188, 19, 254, 0.6);
             text-shadow: none;
+            letter-spacing: 6px;
         }
 
         footer {
             width: 100%;
-            max-width: 600px;
-            margin-top: 40px;
-            font-size: 0.8rem;
-            opacity: 0.5;
-            letter-spacing: 1px;
+            max-width: 650px;
+            margin-top: 50px;
+            font-size: 0.75rem;
+            opacity: 0.4;
+            letter-spacing: 1.5px;
             line-height: 1.4;
-            text-align: left;
+            text-align: center;
         }
 
-        /* Animações e Classes de Estado via JS */
-        .system-alert {
-            background-color: var(--overlay-red) !important;
-        }
-
-        @keyframes textGlitch {
-            0% { opacity: 1; }
-            95% { opacity: 1; transform: skew(0deg); }
-            96% { opacity: 0.5; transform: skew(5deg); color: red; }
-            97% { opacity: 1; transform: skew(-5deg); color: blue; }
-            98% { opacity: 0.8; transform: skew(0deg); }
-            100% { opacity: 1; }
+        /* Classes de animação via JS */
+        .system-accepted {
+            background-color: var(--overlay-transition) !important;
         }
     </style>
 </head>
@@ -187,68 +169,34 @@
 <div class="main-wrapper">
     <header>
         <h1>TRANQUILITY CLAVIUS</h1>
-        <div class="status-bar">AURA OS v8.4.1 | ADMISSION_TERMINAL_03 | SECURE_CONN</div>
+        <div class="status-bar">SEU NOVO AMANHÃ | EXCLUSIVIDADE | PRAZER</div>
     </header>
 
-    <main class="terminal-container" id="terminal">
-        <div class="terminal-header">>[REMETENTE: ADM_CLAVIUS] >[ASSUNTO: ALOCAÇÃO]</div>
-        
+    <main class="invitation-container" id="terminal">
         <p class="hero-text">
-            Sua existência foi otimizada. <br>
-            A fase de escassez terminou. A fase de <span class="highlight-gold">estabilidade</span> começa agora.
+            Uma nova chance. Um novo amanhecer.<br>
+            Deixe o ruído do passado para trás e abrace a <span class="highlight-gold">verdadeira abundância</span>.
         </p>
 
-        <div class="invitation-details">
-            > Nível de Sincronização: 98%<br>
-            > Contrato: <span class="glitch-text">Vitalício/Arasaka-Orbital</span><br>
-            > Função: [DADOS_OCULTOS_PÓS_EMBARQUE]<br>
-            > Nota: Amnésia retrógrada é um protocolo de segurança padrão. Não resista.
+        <div class="luxe-details">
+            > Suítes que antecipam seus desejos.<br>
+            > Acesso a experiências de luxúria e êxtase nunca antes imaginadas.<br>
+            > Segurança absoluta. Paz perpétua.<br>
+            > Você não foi apenas selecionado. Você foi <span class="highlight-gold">consagrado</span>.
         </div>
 
-        <button class="button" onclick="iniciarExperiencia()">INICIAR ADMISSÃO</button>
+        <p style="text-align: center; font-style: italic; color: var(--text-muted); font-size: 0.9rem;">
+            Seu perfil biopsicossocial foi aceito para o programa de Harmonização do Prazer.
+        </p>
+
+        <button class="button" onclick="iniciarExperiencia()">RECLAMAR MINHA CHANCE</button>
     </main>
 
     <footer>
-        AVISO: ESTA É UMA CONEXÃO DE MÃO ÚNICA. O ACEITE É FINAL E VINCULANTE.<br>
-        A LOCALIZAÇÃO GPS DO SEU DISPOSITIVO FOI REGISTRADA PARA EXTRAÇÃO URBANA.
+        AVISO: O ACEITE É FINAL E VINCULANTE.<br>
+        A LOCALIZAÇÃO DO SEU DISPOSITIVO FOI REGISTRADA PARA EXTRAÇÃO PRIORITÁRIA.
     </footer>
 </div>
 
 <audio id="jazzAudio" loop preload="auto">
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" type="audio/mpeg">
-    Seu navegador não suporta áudio HTML5.
-</audio>
-
-<script>
-    function iniciarExperiencia() {
-        const audio = document.getElementById('jazzAudio');
-        const body = document.body;
-        const terminal = document.getElementById('terminal');
-        
-        // 1. Iniciar música com fade-in suave
-        audio.volume = 0;
-        audio.play();
-        let vol = 0;
-        let fadeInterval = setInterval(() => {
-            if (vol < 0.25) { // Volume confortável (elevator music vibe)
-                vol += 0.05;
-                audio.volume = vol;
-            } else {
-                clearInterval(fadeInterval);
-            }
-        }, 250);
-
-        // 2. Transição Visual para o "Vermelho de Falha/Contrato Aceito"
-        body.classList.add('system-alert');
-        terminal.style.borderColor = "#8b0000";
-        terminal.style.boxShadow = "0 0 30px rgba(255, 0, 0, 0.3)";
-        
-        // 3. Alerta Narrativo Cybertech
-        setTimeout(() => {
-            alert('ADMISSÃO CONFIRMADA.\n\nAguarde extração tática Militech em 120 segundos.\n\nA Arasaka Corp agradece sua cooperação.');
-        }, 800);
-    }
-</script>
-
-</body>
-</html>
+    <source src="
