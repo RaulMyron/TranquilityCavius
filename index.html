@@ -7,25 +7,30 @@
     <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron:wght@500;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Padrão: MODO CLARO (Neo-Kitsch / Decadente) */
+            --bg-color: #fdfdfd;
+            --primary: #d4af37;   /* Ouro */
+            --secondary: #222;
+            --text: #1a1a1a;
+            --accent: #8b0000;    /* Vermelho sangue */
+            --font-main: 'Cinzel', serif;
+            --font-title: 'Cinzel', serif;
+            --box-bg: rgba(255, 255, 255, 0.95);
+            --scanline-opacity: 0.05;
+        }
+
+        /* MODO ESCURO (Terminal Cybertech) */
+        .dark-mode {
             --bg-color: #050509;
             --primary: #bc13fe;   /* Roxo Neon */
             --secondary: #00e5ff; /* Ciano Tech */
             --text: #e0e0e0;
-            --accent: #d4af37;    /* Ouro Luxúria */
+            --accent: #d4af37;
             --font-main: 'VT323', monospace;
             --font-title: 'Orbitron', sans-serif;
-        }
-
-        /* MODO NEO-KITSCH (Tranquility Base / Bioshock Style) */
-        .light-mode {
-            --bg-color: #fdfdfd;
-            --primary: #d4af37;   /* Ouro vira a cor primária */
-            --secondary: #222;
-            --text: #1a1a1a;
-            --accent: #8b0000;    /* Vermelho sangue para detalhes */
-            --font-main: 'Cinzel', serif; /* Fonte clássica/elegante */
-            --font-title: 'Cinzel', serif;
-            background-image: radial-gradient(circle, #fff 0%, #e8e8e8 100%);
+            --box-bg: rgba(10, 10, 20, 0.9);
+            --scanline-opacity: 0.15;
+            background-image: none !important;
         }
 
         * { box-sizing: border-box; cursor: crosshair; }
@@ -33,105 +38,130 @@
         body, html {
             margin: 0; padding: 0;
             background-color: var(--bg-color);
+            background-image: radial-gradient(circle, #fff 0%, #e0e0e0 100%);
             font-family: var(--font-main);
             color: var(--text);
-            height: 100%; overflow: hidden;
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-x: hidden;
         }
 
-        /* Scanlines - Mais fortes no modo dark, sutis no light */
+        /* Scanlines adaptáveis */
         body::before {
             content: " "; display: block; position: fixed;
             top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
-                        linear-gradient(90deg, rgba(188, 19, 254, 0.03), rgba(0, 229, 255, 0.02));
-            z-index: 10; background-size: 100% 4px, 3px 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, var(--scanline-opacity)) 50%);
+            z-index: 10; background-size: 100% 4px;
             pointer-events: none;
         }
 
         .wrapper {
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            height: 100dvh; padding: 20px; position: relative; z-index: 5;
-        }
-
-        .terminal {
-            width: 100%; max-width: 650px;
-            background: rgba(10, 10, 20, 0.85);
-            border: 2px solid var(--primary);
-            padding: 35px;
-            box-shadow: 0 0 30px rgba(188, 19, 254, 0.2);
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
             position: relative;
-            transition: all 0.5s ease;
-        }
-
-        .light-mode .terminal {
-            background: rgba(255, 255, 255, 0.9);
-            border: 3px double var(--primary);
-            box-shadow: 0 15px 50px rgba(0,0,0,0.1);
-            clip-path: none;
+            z-index: 5;
         }
 
         .header-ui {
-            display: flex; justify-content: space-between; align-items: center;
-            width: 100%; max-width: 650px; margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 1px solid var(--primary);
+            padding-bottom: 10px;
         }
 
         .mode-toggle {
             background: none; border: 1px solid var(--primary);
             color: var(--primary); font-family: var(--font-main);
-            padding: 5px 15px; cursor: pointer; text-transform: uppercase;
+            padding: 5px 12px; cursor: pointer; text-transform: uppercase;
+            font-size: 0.8rem;
         }
 
         .audio-controls {
-            display: flex; align-items: center; gap: 10px;
-            font-size: 0.8rem; color: var(--primary);
+            display: flex; align-items: center; gap: 8px;
+            font-size: 0.75rem; color: var(--primary);
+        }
+
+        .terminal {
+            width: 100%;
+            background: var(--box-bg);
+            border: 2px solid var(--primary);
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         h1 {
             font-family: var(--font-title);
-            font-size: 1.8rem; color: var(--primary);
-            text-align: center; margin: 0; letter-spacing: 5px;
+            font-size: clamp(1.4rem, 5vw, 2rem); 
+            color: var(--primary);
+            text-align: center; margin: 0; letter-spacing: 4px;
         }
 
         .promo-text {
-            font-size: 1.3rem; line-height: 1.5; margin: 25px 0;
-            text-align: center; border-bottom: 1px solid var(--primary);
-            padding-bottom: 20px;
+            font-size: clamp(1rem, 4vw, 1.2rem); 
+            line-height: 1.4; text-align: center;
+            border-bottom: 1px dotted var(--primary);
+            padding-bottom: 15px;
         }
 
         .luxe-options {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
-            margin: 20px 0; font-style: italic;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+            font-size: clamp(0.85rem, 3vw, 1rem);
+            font-style: italic; opacity: 0.9;
         }
 
-        @media (max-width: 500px) { .luxe-options { grid-template-columns: 1fr; } }
+        @media (max-width: 450px) { .luxe-options { grid-template-columns: 1fr; } }
 
         .btn-claim {
-            width: 100%; padding: 20px;
+            width: 100%; padding: 18px;
             background: none; border: 2px solid var(--primary);
             color: var(--primary); font-family: var(--font-title);
-            font-size: 1.1rem; letter-spacing: 3px;
-            transition: 0.4s; cursor: pointer; margin-top: 25px;
+            font-size: 0.9rem; letter-spacing: 2px;
+            transition: 0.4s; cursor: pointer;
+            margin-top: 10px;
+            text-transform: uppercase;
         }
 
         .btn-claim:hover {
-            background: var(--primary); color: var(--bg-color);
-            box-shadow: 0 0 30px var(--primary);
+            background: var(--primary); color: #fff;
+            box-shadow: 0 0 20px var(--primary);
         }
 
-        footer { text-align: center; font-size: 0.8rem; margin-top: 40px; opacity: 0.5; }
+        footer { 
+            text-align: center; font-size: 0.7rem; opacity: 0.6; 
+            padding: 10px; position: relative;
+        }
 
-        input[type=range] { accent-color: var(--primary); cursor: pointer; }
+        /* Easter Egg: Mensagem Fantasma */
+        footer:hover::after {
+            content: " - DON'T GO. THEY ARE LISTENING.";
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        input[type=range] { accent-color: var(--primary); width: 80px; }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
     <div class="header-ui">
-        <button class="mode-toggle" onclick="toggleMode()">ALTERAR VISUALIZAÇÃO</button>
+        <button class="mode-toggle" onclick="toggleMode()" id="toggleBtn">MODO_TERMINAL</button>
         <div class="audio-controls">
-            <span>VOLUME_JAZZ:</span>
+            <span>VOL:</span>
             <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="0.3" oninput="updateVolume()">
         </div>
     </div>
@@ -141,11 +171,11 @@
         
         <div class="promo-text">
             VOCÊ FOI SORTEADO!<br>
-            A Arasaka Corp apresenta o mais novo empreendimento orbital.
+            A Arasaka Corp apresenta o ápice do luxo orbital.
         </div>
         
-        <p style="text-align: center; letter-spacing: 1px;">
-            Uma nova vida te espera acima das nuvens. Onde o caos da Terra não alcança e o <span style="color:var(--accent); font-weight:bold;">luxo é o padrão.</span>
+        <p style="text-align: center; margin: 0; font-size: 0.95rem;">
+            Uma nova vida acima das nuvens. Onde o caos não alcança e o <span style="color:var(--primary); font-weight:bold;">luxo é o padrão.</span>
         </p>
 
         <div class="luxe-options">
@@ -155,29 +185,32 @@
             • TODOS SÃO BEM-VINDOS.
         </div>
 
-        <p style="font-size: 0.9rem; text-align: center; opacity: 0.8;">
-            [Processando perfil biopsicossocial... Sincronização completa.]
-        </p>
-
         <button class="btn-claim" onclick="initAdmission()">RECLAMAR MINHA CHANCE</button>
     </main>
 
-    <footer>
-        LOG: Localização em espera. Equipes Militech prontas para extração urbana.<br>
-        ARASAKA - "Para um amanhã sem ruídos."
+    <footer id="footerText">
+        LOG_REQUISITION: Localização em espera. Equipes Militech prontas.<br>
+        © ARASAKA CORP - ÓRBITA LUNAR CLAVIUS.
     </footer>
 </div>
 
 <audio id="bgMusic" loop>
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
+    <source src="som.mp3" type="audio/mpeg">
 </audio>
 
 <script>
     const audio = document.getElementById('bgMusic');
     const slider = document.getElementById('volumeSlider');
+    const toggleBtn = document.getElementById('toggleBtn');
 
     function toggleMode() {
-        document.body.classList.toggle('light-mode');
+        document.body.classList.toggle('dark-mode');
+        // Muda o texto do botão de acordo com o modo
+        if (document.body.classList.contains('dark-mode')) {
+            toggleBtn.innerText = "MODO_NEO_KITSCH";
+        } else {
+            toggleBtn.innerText = "MODO_TERMINAL";
+        }
     }
 
     function updateVolume() {
@@ -187,12 +220,13 @@
     function initAdmission() {
         audio.play();
         updateVolume();
-
-        document.getElementById('mainTerminal').style.borderColor = "#8b0000";
+        
+        // Altera levemente a borda para indicar o aceite
+        document.getElementById('mainTerminal').style.borderColor = "var(--accent)";
         
         setTimeout(() => {
-            alert('RECLAMAÇÃO CONFIRMADA!\n\nA Tranquility Corp agradece sua confiança. Uma equipe especializada da Militech irá buscá-lo em sua localização atual em até 2 dias úteis para o transporte orbital.\n\n"Não se preocupe com as malas. Você não precisará de nada do que possui agora."');
-        }, 800);
+            alert('RECLAMAÇÃO CONFIRMADA!\n\nA Tranquility Corp agradece sua confiança. Uma equipe especializada da Militech irá buscá-lo em sua localização atual em até 2 dias úteis.\n\n"Mantenha a calma. O amanhã começa agora."');
+        }, 600);
     }
 </script>
 </body>
