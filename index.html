@@ -3,32 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TRANQUILITY_CLAVIUS_2063</title>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron:wght@500;700&family=Cinzel:wght@400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <title>TRANQUILITY_CLAVIUS_VOYAGE</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron:wght@500;700&family=Cinzel:wght@400;700&family=Montserrat:wght@200;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --bg-color: #fdfdfd;
             --primary: #d4af37;
             --text: #1a1a1a;
-            --box-bg: rgba(255, 255, 255, 0.95);
+            --box-bg: rgba(255, 255, 255, 0.96);
             --scanline: rgba(0, 0, 0, 0.1);
+            --font-main: 'Cinzel', serif;
+            --font-title: 'Orbitron', sans-serif;
+            --ticket-color: #3e0303; 
         }
 
         .dark-mode {
-            --bg-color: #000000;
+            --bg-color: #020205;
             --primary: #bc13fe;
             --text: #e0e0e0;
-            --box-bg: rgba(10, 10, 20, 0.9);
+            --box-bg: rgba(5, 5, 10, 0.95);
             --scanline: rgba(188, 19, 254, 0.2);
-        }
-
-        .red-room-mode {
-            --bg-color: #4a0404;
-            --primary: #ffffff;
-            --text: #ffffff;
-            --box-bg: rgba(0, 0, 0, 0.85);
-            --scanline: rgba(255, 255, 255, 0.1);
+            --font-main: 'VT323', monospace;
+            background-image: none !important;
         }
 
         * { box-sizing: border-box; }
@@ -37,10 +34,12 @@
             margin: 0; padding: 0;
             width: 100%; min-height: 100vh;
             background-color: var(--bg-color);
+            background-image: radial-gradient(circle, #fff 0%, #e0e0e0 100%);
             color: var(--text);
-            font-family: 'Cinzel', serif;
+            font-family: var(--font-main);
+            transition: background-color 0.8s ease;
             display: flex; align-items: center; justify-content: center;
-            transition: background-color 0.5s ease;
+            overflow-x: hidden;
         }
 
         body::before {
@@ -56,55 +55,52 @@
             display: flex; flex-direction: column; gap: 15px;
         }
 
-        .audio-ctrl { text-align: center; }
+        .audio-ctrl { text-align: center; margin-bottom: 5px; }
         .btn-audio {
             background: none; border: 1px solid var(--primary);
             color: var(--primary); padding: 5px 15px;
-            font-family: 'Orbitron', sans-serif; cursor: pointer;
-            font-size: 0.7rem; letter-spacing: 2px;
+            font-family: var(--font-title); font-size: 0.7rem; letter-spacing: 2px;
         }
 
         .header-ui {
             display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--primary); padding-bottom: 8px;
+            border-bottom: 1px solid var(--primary); padding-bottom: 10px;
         }
 
         .terminal {
             background: var(--box-bg);
-            border: 1px solid var(--primary);
-            padding: 40px; width: 100%;
-            box-shadow: 0 0 40px rgba(0,0,0,0.1);
+            border: 2px solid var(--primary);
+            padding: 35px; width: 100%;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
             display: flex; flex-direction: column; gap: 20px;
             position: relative;
+            transition: all 0.3s ease;
         }
 
-        h1 { font-family: 'Orbitron', sans-serif; text-align: center; margin: 0; color: var(--primary); letter-spacing: 6px; font-size: clamp(1.2rem, 5vw, 2.2rem); }
+        h1 { font-family: var(--font-title); text-align: center; margin: 0; color: var(--primary); letter-spacing: 5px; font-size: clamp(1.4rem, 5vw, 2.2rem); }
 
-        .luxe-list { font-style: italic; font-size: 1rem; line-height: 1.8; list-style: none; padding: 0; }
+        .luxe-list { font-style: italic; font-size: 1rem; line-height: 1.6; list-style: none; padding: 0; color: var(--text); }
+        .luxe-list li { border-left: 2px solid var(--primary); padding-left: 10px; margin-bottom: 5px; }
 
         .btn-claim {
             width: 100%; padding: 20px;
-            background: none; border: 1px solid var(--primary);
-            color: var(--primary); font-family: 'Orbitron', sans-serif;
-            cursor: pointer; transition: 0.4s; letter-spacing: 2px;
+            background: none; border: 2px solid var(--primary);
+            color: var(--primary); font-family: var(--font-title);
+            font-size: 0.9rem; cursor: pointer; transition: 0.4s;
+            text-transform: uppercase;
         }
-        .btn-claim:hover { background: var(--primary); color: #fff; }
+        .btn-claim:hover { background: var(--primary); color: #fff; box-shadow: 0 0 20px var(--primary); }
 
-        /* Estilo do Bilhete */
-        #bilhete {
-            display: none;
-            border-top: 2px dashed var(--primary);
-            padding-top: 20px;
-            margin-top: 10px;
-            font-family: 'VT323', monospace;
-            text-align: left;
-            animation: printEffect 1.5s ease-out;
+        #ticket-red {
+            display: none; width: 100%; padding: 30px; text-align: center;
+            color: #ffffff; font-family: 'Montserrat', sans-serif;
+            animation: fadeInRed 0.6s ease-in;
         }
 
-        @keyframes printEffect {
-            from { max-height: 0; opacity: 0; }
-            to { max-height: 500px; opacity: 1; }
-        }
+        @keyframes fadeInRed { from { opacity: 0; background: #fff; } to { opacity: 1; background: var(--ticket-color); } }
+
+        #ticket-red h2 { font-weight: 200; font-size: 1rem; color: #fff; margin: 0 0 20px 0; border-bottom: 1px solid #fff; }
+        .highlight-gold { color: #d4af37; font-weight: bold; }
 
         .footer-ui { display: flex; justify-content: space-between; font-size: 0.7rem; opacity: 0.8; padding-top: 10px; }
     </style>
@@ -126,55 +122,48 @@
         </div>
     </div>
 
-    <main class="terminal">
-        <h1>TRANQUILITY CLAVIUS</h1>
-        
-        <div id="content-main">
-            <p style="text-align: center; margin: 0; font-size: 1.1rem; font-weight: bold;">
+    <main class="terminal" id="mainTerminal">
+        <div id="content-invite">
+            <h1>TRANQUILITY CLAVIUS</h1>
+            <p style="text-align: center; font-size: 1.1rem; font-weight: bold;">
                 VOCÊ FOI SORTEADO!<br>
-                <span style="font-size: 0.8rem; opacity: 0.8; font-weight: normal;">Arasaka Corp © 2063</span>
+                <span style="font-size: 0.8rem; opacity: 0.8; font-weight: normal;">Arasaka Orbital Fleet © 2063</span>
             </p>
-
+            <p style="text-align: center; font-style: italic; font-size: 0.9rem;">"Onde o luxo encontra o vácuo eterno."</p>
             <ul class="luxe-list">
-                <li>• OPORTUNIDADE DE EMPREGO</li>
-                <li>• CHANCE DE FICAR RICO</li>
-                <li>• UM NOVO COMEÇO...</li>
-                <li>• TODOS SÃO BEM-VINDOS.</li>
+                <li>• OPORTUNIDADE DE EMPREGO (DECK TÉCNICO)</li>
+                <li>• CHANCE DE FICAR RICO (CASSINO HIGH-ROLLER)</li>
+                <li>• UM NOVO COMEÇO... (AMNÉSIA CONSENTIDA)</li>
+                <li>• TODOS SÃO BEM-VINDOS NO HOTEL ESPACIAL.</li>
             </ul>
-
-            <button class="btn-claim" onclick="gerarBilhete()">
-                RECLAMAR MINHA CHANCE
-            </button>
+            <button class="btn-claim" onclick="initAdmission()">RECLAMAR MINHA CHANCE</button>
         </div>
 
-        <div id="bilhete">
-            <p style="text-align: center; font-weight: bold; border-bottom: 1px solid var(--primary); margin-bottom: 10px;">
-                CONFIRMAÇÃO DE EMBARQUE #2063-X
-            </p>
-            <p>> STATUS: CONSAGRADO</p>
-            <p>> LOCAL: ESTAÇÃO CLAVIUS - ÓRBITA LUNAR</p>
-            <p>> EXTRAÇÃO: 48 HORAS (MILITECH TACTICAL)</p>
-            <p>> NOTA: AMNÉSIA RETRÓGRADA É UM REQUISITO PADRÃO.</p>
-            <p style="font-size: 0.8rem; text-align: center; border-top: 1px dashed var(--primary); padding-top: 10px; margin-top: 10px;">
-                "O AMANHÃ É UM PRIVILÉGIO ARASAKA."
-            </p>
-            <button class="btn-audio" onclick="window.print()" style="width: 100%; margin-top: 10px; border-style: dotted;">IMPRIMIR PDF</button>
+        <div id="ticket-red">
+            <h2>VOUCHER DE EMBARQUE #2064</h2>
+            <p>Sua jornada estelar foi <span class="highlight-gold">consagrada</span>.</p>
+            <p>> PASSAGEIRO: [CONVIDADO_ESPECIAL]</p>
+            <p>> DESTINO: CRUZEIRO ESPACIAL CLAVIUS</p>
+            <p>> TRAJETÓRIA: ÓRBITA PROFUNDA / ZERO-G</p>
+            <hr style="border-style: dotted; margin: 20px 0;">
+            <p style="font-size: 0.8rem; font-style: italic;">Arasaka Corp: Navegando rumo à sua perfeição.</p>
+            <button class="btn-audio" onclick="window.print()" style="width: 100%; border:1px dashed #fff; color:#fff; font-family:'VT323'; margin-top:20px;">BAIXAR CONTRATO</button>
         </div>
     </main>
 
     <div class="footer-ui">
-        <span><i class="fas fa-microchip"></i> ARASAKA_SYSTEMS_2063</span>
-        <span onclick="showHelp()" style="cursor:help;"><i class="fas fa-question-circle"></i> AJUDA</span>
+        <span><i class="fas fa-rocket"></i> ARASAKA_ORBITAL_2063</span>
+        <span onclick="alert('ERROR: Ajuda indisponível. Eles estão ouvindo...')" style="cursor:help;"><i class="fas fa-question-circle"></i> AJUDA</span>
     </div>
 </div>
 
 <audio id="bgMusic" loop>
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+    <source src="som.mp3" type="audio/mpeg">
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
 </audio>
 
 <script>
     const audio = document.getElementById('bgMusic');
-    let helpCount = 0;
     let currentMode = 0;
 
     function toggleAudio() {
@@ -193,36 +182,24 @@
     function cycleMode() {
         const body = document.body;
         const btn = document.getElementById('modeBtn');
-        currentMode = (currentMode + 1) % 3;
-        
-        body.classList.remove('dark-mode', 'red-room-mode');
-        if (currentMode === 0) {
-            btn.innerText = "MODO_TERMINAL";
-        } else if (currentMode === 1) {
+        currentMode = (currentMode + 1) % 2;
+        body.classList.remove('dark-mode');
+        if (currentMode === 1) {
             body.classList.add('dark-mode');
-            btn.innerText = "MODO_RED_ROOM";
-        } else {
-            body.classList.add('red-room-mode');
             btn.innerText = "MODO_NEO_KITSCH";
-        }
-    }
-
-    function showHelp() {
-        if(helpCount === 0) {
-            alert('AURA_SYSTEM_ERROR: "Por favor... não vá, somente mentiras."');
-            helpCount++;
         } else {
-            alert('ASSISTENTE ARASAKA: Sua segurança é nossa prioridade.');
+            btn.innerText = "MODO_TERMINAL";
         }
     }
 
-    function gerarBilhete() {
-        // Toca o som automaticamente se ainda não tiver tocando
-        if (audio.paused) { audio.play(); document.getElementById('audioBtn').innerHTML = '<i class="fas fa-pause"></i> PAUSAR SOM'; }
-        
-        document.getElementById('content-main').style.display = 'none';
-        document.getElementById('bilhete').style.display = 'block';
-        alert('ADMISSÃO CONFIRMADA.\nSeu bilhete foi gerado. A Arasaka agradece sua alma.');
+    function initAdmission() {
+        if (audio.paused) audio.play();
+        document.getElementById('content-invite').style.display = 'none';
+        document.getElementById('ticket-red').style.display = 'block';
+        document.getElementById('mainTerminal').style.backgroundColor = "var(--ticket-color)";
+        setTimeout(() => {
+            alert('ADMISSÃO CONFIRMADA.\nLançamento Militech em rota.\n\nEste documento é vinculante. A AURAOperating System detectou seu nível de trauma.\nProtocolo de Amnésia Retrógada Consentida foi ativado para sua viagem estelar.');
+        }, 800);
     }
 </script>
 </body>
