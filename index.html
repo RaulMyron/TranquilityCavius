@@ -8,24 +8,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
+            /* MODO 0: NEO-KITSCH */
             --bg-color: #fdfdfd;
             --primary: #d4af37;
             --text: #1a1a1a;
             --box-bg: rgba(255, 255, 255, 0.96);
             --scanline: rgba(0, 0, 0, 0.1);
             --font-main: 'Cinzel', serif;
-            --font-title: 'Orbitron', sans-serif;
-            --ticket-color: #3e0303; 
         }
 
         .dark-mode {
             --bg-color: #020205;
             --primary: #bc13fe;
             --text: #e0e0e0;
-            --box-bg: rgba(5, 5, 10, 0.95);
+            --box-bg: rgba(10, 10, 20, 0.95);
             --scanline: rgba(188, 19, 254, 0.2);
             --font-main: 'VT323', monospace;
-            background-image: none !important;
+        }
+
+        .red-room-mode {
+            --bg-color: #4a0404;
+            --primary: #ffffff;
+            --text: #ffffff;
+            --box-bg: rgba(0, 0, 0, 0.85);
+            --scanline: rgba(255, 255, 255, 0.1);
+            --font-main: 'Montserrat', sans-serif;
         }
 
         * { box-sizing: border-box; }
@@ -34,11 +41,10 @@
             margin: 0; padding: 0;
             width: 100%; min-height: 100vh;
             background-color: var(--bg-color);
-            background-image: radial-gradient(circle, #fff 0%, #e0e0e0 100%);
             color: var(--text);
             font-family: var(--font-main);
-            transition: background-color 0.8s ease;
             display: flex; align-items: center; justify-content: center;
+            transition: all 0.5s ease;
             overflow-x: hidden;
         }
 
@@ -55,13 +61,6 @@
             display: flex; flex-direction: column; gap: 15px;
         }
 
-        .audio-ctrl { text-align: center; margin-bottom: 5px; }
-        .btn-audio {
-            background: none; border: 1px solid var(--primary);
-            color: var(--primary); padding: 5px 15px;
-            font-family: var(--font-title); font-size: 0.7rem; letter-spacing: 2px;
-        }
-
         .header-ui {
             display: flex; justify-content: space-between; align-items: center;
             border-bottom: 1px solid var(--primary); padding-bottom: 10px;
@@ -69,98 +68,116 @@
 
         .terminal {
             background: var(--box-bg);
-            border: 2px solid var(--primary);
+            border: 1px solid var(--primary);
             padding: 35px; width: 100%;
             box-shadow: 0 0 30px rgba(0,0,0,0.1);
             display: flex; flex-direction: column; gap: 20px;
-            position: relative;
-            transition: all 0.3s ease;
         }
 
-        h1 { font-family: var(--font-title); text-align: center; margin: 0; color: var(--primary); letter-spacing: 5px; font-size: clamp(1.4rem, 5vw, 2.2rem); }
+        /* Título com espaçamento reduzido conforme pedido */
+        h1 { 
+            font-family: 'Orbitron', sans-serif; 
+            text-align: center; margin: 0; 
+            color: var(--primary); 
+            letter-spacing: 2px; /* Reduzido */
+            font-size: clamp(1.4rem, 5vw, 2.2rem); 
+        }
 
-        .luxe-list { font-style: italic; font-size: 1rem; line-height: 1.6; list-style: none; padding: 0; color: var(--text); }
+        .luxe-list { font-style: italic; font-size: 1rem; line-height: 1.6; list-style: none; padding: 0; }
         .luxe-list li { border-left: 2px solid var(--primary); padding-left: 10px; margin-bottom: 5px; }
 
         .btn-claim {
             width: 100%; padding: 20px;
             background: none; border: 2px solid var(--primary);
-            color: var(--primary); font-family: var(--font-title);
-            font-size: 0.9rem; cursor: pointer; transition: 0.4s;
-            text-transform: uppercase;
+            color: var(--primary); font-family: 'Orbitron', sans-serif;
+            cursor: pointer; transition: 0.4s; text-transform: uppercase;
         }
-        .btn-claim:hover { background: var(--primary); color: #fff; box-shadow: 0 0 20px var(--primary); }
+        .btn-claim:hover { background: var(--primary); color: #000; }
 
-        #ticket-red {
-            display: none; width: 100%; padding: 30px; text-align: center;
-            color: #ffffff; font-family: 'Montserrat', sans-serif;
-            animation: fadeInRed 0.6s ease-in;
+        /* MODAL DO BILHETE (ESTILO TREM) */
+        #ticket-modal {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.95);
+            z-index: 1000; align-items: center; justify-content: center;
+            padding: 20px;
         }
 
-        @keyframes fadeInRed { from { opacity: 0; background: #fff; } to { opacity: 1; background: var(--ticket-color); } }
+        .train-ticket {
+            background: #e8e4d9; /* Cor de papel envelhecido tech */
+            color: #1a1a1a; width: 100%; max-width: 400px;
+            padding: 0; border: 2px solid #000;
+            font-family: 'VT323', monospace;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.4);
+            position: relative;
+        }
 
-        #ticket-red h2 { font-weight: 200; font-size: 1rem; color: #fff; margin: 0 0 20px 0; border-bottom: 1px solid #fff; }
-        .highlight-gold { color: #d4af37; font-weight: bold; }
+        .ticket-header { background: #000; color: #fff; padding: 10px; text-align: center; letter-spacing: 3px; }
+        .ticket-body { padding: 20px; border-bottom: 2px dashed #000; }
+        .ticket-stub { padding: 15px; text-align: center; background: #dcd7c9; font-size: 1.2rem; }
+        
+        /* Picote lateral de bilhete de trem */
+        .train-ticket::before, .train-ticket::after {
+            content: ''; position: absolute; left: -10px; top: 70%;
+            width: 20px; height: 20px; background: #000; border-radius: 50%;
+        }
+        .train-ticket::after { left: auto; right: -10px; }
 
-        .footer-ui { display: flex; justify-content: space-between; font-size: 0.7rem; opacity: 0.8; padding-top: 10px; }
+        .footer-ui { display: flex; justify-content: space-between; font-size: 0.7rem; opacity: 0.8; }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
-    <div class="audio-ctrl">
-        <button class="btn-audio" onclick="toggleAudio()" id="audioBtn">
-            <i class="fas fa-play"></i> ATIVAR SOM AMBIENTE
+    <div style="text-align: center;">
+        <button onclick="toggleAudio()" id="audioBtn" style="background:none; border:1px solid var(--primary); color:var(--primary); padding:5px 15px; cursor:pointer; font-family:'Orbitron'; font-size:0.7rem;">
+            <i class="fas fa-play"></i> ATIVAR SOM
         </button>
     </div>
 
     <div class="header-ui">
         <button onclick="cycleMode()" style="background:none; border:1px solid var(--primary); color:var(--primary); cursor:pointer; font-size: 0.65rem;" id="modeBtn">MODO_TERMINAL</button>
-        <div style="font-size: 0.7rem;">
-            <i class="fas fa-volume-low" style="color:var(--primary)"></i> 
-            <input type="range" min="0" max="1" step="0.1" value="0.4" id="volRange" oninput="updateVol(this.value)" style="accent-color: var(--primary); vertical-align: middle; width: 60px;">
-        </div>
+        <input type="range" min="0" max="1" step="0.1" value="0.4" oninput="document.getElementById('bgMusic').volume = this.value" style="accent-color: var(--primary); width: 60px;">
     </div>
 
-    <main class="terminal" id="mainTerminal">
-        <div id="content-invite">
-            <h1>TRANQUILITY CLAVIUS</h1>
-            <p style="text-align: center; font-size: 1.1rem; font-weight: bold;">
-                VOCÊ FOI SORTEADO!<br>
-                <span style="font-size: 0.8rem; opacity: 0.8; font-weight: normal;">Arasaka Orbital Fleet © 2063</span>
-            </p>
-            <p style="text-align: center; font-style: italic; font-size: 0.9rem;">"Onde o luxo encontra o vácuo eterno."</p>
-            <ul class="luxe-list">
-                <li>• OPORTUNIDADE DE EMPREGO (DECK TÉCNICO)</li>
-                <li>• CHANCE DE FICAR RICO (CASSINO HIGH-ROLLER)</li>
-                <li>• UM NOVO COMEÇO... (AMNÉSIA CONSENTIDA)</li>
-                <li>• TODOS SÃO BEM-VINDOS NO HOTEL ESPACIAL.</li>
-            </ul>
-            <button class="btn-claim" onclick="initAdmission()">RECLAMAR MINHA CHANCE</button>
-        </div>
+    <main class="terminal">
+        <h1>TRANQUILITY CLAVIUS</h1>
+        <p style="text-align: center; font-weight: bold;">VOCÊ FOI SORTEADO!<br><span style="font-weight: normal; opacity: 0.7;">Arasaka Orbital Fleet © 2063</span></p>
+        
+        <ul class="luxe-list">
+            <li>• OPORTUNIDADE DE EMPREGO (DECK TÉCNICO)</li>
+            <li>• CHANCE DE FICAR RICO (CASSINO)</li>
+            <li>• UM NOVO COMEÇO (AMNÉSIA CONSENTIDA)</li>
+            <li>• TODOS SÃO BEM-VINDOS À NAVE.</li>
+        </ul>
 
-        <div id="ticket-red">
-            <h2>VOUCHER DE EMBARQUE #2064</h2>
-            <p>Sua jornada estelar foi <span class="highlight-gold">consagrada</span>.</p>
-            <p>> PASSAGEIRO: [CONVIDADO_ESPECIAL]</p>
-            <p>> DESTINO: CRUZEIRO ESPACIAL CLAVIUS</p>
-            <p>> TRAJETÓRIA: ÓRBITA PROFUNDA / ZERO-G</p>
-            <hr style="border-style: dotted; margin: 20px 0;">
-            <p style="font-size: 0.8rem; font-style: italic;">Arasaka Corp: Navegando rumo à sua perfeição.</p>
-            <button class="btn-audio" onclick="window.print()" style="width: 100%; border:1px dashed #fff; color:#fff; font-family:'VT323'; margin-top:20px;">BAIXAR CONTRATO</button>
-        </div>
+        <button class="btn-claim" onclick="gerarBilhete()">RECLAMAR MINHA CHANCE</button>
     </main>
 
     <div class="footer-ui">
-        <span><i class="fas fa-rocket"></i> ARASAKA_ORBITAL_2063</span>
-        <span onclick="alert('ERROR: Ajuda indisponível. Eles estão ouvindo...')" style="cursor:help;"><i class="fas fa-question-circle"></i> AJUDA</span>
+        <span>ARASAKA_SYSTEMS_2063</span>
+        <span onclick="alert('ERROR: Ajuda indisponível. Por favor... não vá.')" style="cursor:help;"><i class="fas fa-question-circle"></i> AJUDA</span>
     </div>
 </div>
 
-<audio id="bgMusic" loop>
-    <source src="som.mp3" type="audio/mpeg">
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
-</audio>
+<div id="ticket-modal" onclick="this.style.display='none'">
+    <div class="train-ticket" onclick="event.stopPropagation()">
+        <div class="ticket-header">ARASAKA VOYAGE #2064</div>
+        <div class="ticket-body">
+            <p style="font-size: 1.4rem; text-decoration: underline;">BILHETE DE EMBARQUE ÚNICO</p>
+            <p>ORIGEM: TERRA (SETOR 04)</p>
+            <p>DESTINO: NAVE CASSINO CLAVIUS</p>
+            <p>STATUS: CONSAGRADO</p>
+            <p>EXTRAÇÃO: MILITECH TACTICAL (48H)</p>
+        </div>
+        <div class="ticket-stub">
+            VALIDO PARA: 01 ALMA <br>
+            <span style="font-size: 0.8rem;">NÃO REEMBOLSÁVEL</span>
+        </div>
+        <button onclick="window.print()" style="width:100%; padding:10px; background:#000; color:#fff; border:none; cursor:pointer; font-family:'VT323';">SALVAR DIGITALMENTE</button>
+    </div>
+</div>
+
+<audio id="bgMusic" loop><source src="som.mp3" type="audio/mpeg"></audio>
 
 <script>
     const audio = document.getElementById('bgMusic');
@@ -168,38 +185,25 @@
 
     function toggleAudio() {
         const btn = document.getElementById('audioBtn');
-        if (audio.paused) {
-            audio.play();
-            btn.innerHTML = '<i class="fas fa-pause"></i> PAUSAR SOM';
-        } else {
-            audio.pause();
-            btn.innerHTML = '<i class="fas fa-play"></i> RETOMAR SOM';
-        }
+        if (audio.paused) { audio.play(); btn.innerHTML = '<i class="fas fa-pause"></i> PAUSAR SOM'; }
+        else { audio.pause(); btn.innerHTML = '<i class="fas fa-play"></i> RETOMAR SOM'; }
     }
-
-    function updateVol(val) { audio.volume = val; }
 
     function cycleMode() {
         const body = document.body;
         const btn = document.getElementById('modeBtn');
-        currentMode = (currentMode + 1) % 2;
-        body.classList.remove('dark-mode');
-        if (currentMode === 1) {
-            body.classList.add('dark-mode');
-            btn.innerText = "MODO_NEO_KITSCH";
-        } else {
-            btn.innerText = "MODO_TERMINAL";
-        }
+        currentMode = (currentMode + 1) % 3;
+        body.classList.remove('dark-mode', 'red-room-mode');
+        
+        if (currentMode === 0) { btn.innerText = "MODO_TERMINAL"; }
+        else if (currentMode === 1) { body.classList.add('dark-mode'); btn.innerText = "MODO_RED_ROOM"; }
+        else { body.classList.add('red-room-mode'); btn.innerText = "MODO_NEO_KITSCH"; }
     }
 
-    function initAdmission() {
+    function gerarBilhete() {
         if (audio.paused) audio.play();
-        document.getElementById('content-invite').style.display = 'none';
-        document.getElementById('ticket-red').style.display = 'block';
-        document.getElementById('mainTerminal').style.backgroundColor = "var(--ticket-color)";
-        setTimeout(() => {
-            alert('ADMISSÃO CONFIRMADA.\nLançamento Militech em rota.\n\nEste documento é vinculante. A AURAOperating System detectou seu nível de trauma.\nProtocolo de Amnésia Retrógada Consentida foi ativado para sua viagem estelar.');
-        }, 800);
+        document.getElementById('ticket-modal').style.display = 'flex';
+        alert('ADMISSÃO CONFIRMADA.\nSeu bilhete foi gerado. A Arasaka agradece sua alma.');
     }
 </script>
 </body>
