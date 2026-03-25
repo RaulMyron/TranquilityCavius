@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARASAKA TERMINAL // CLAVIUS</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background: #0d0d0f;
+    color: #d4af37;
+    font-family: 'Share Tech Mono', monospace;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ── TITLEBAR estilo Windows Terminal ── */
+.titlebar {
+    background: #1a1a1f;
+    border-bottom: 1px solid #2a2a35;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    height: 40px;
+    gap: 12px;
+    flex-shrink: 0;
+    user-select: none;
+}
+.titlebar-icon { font-size: 0.75rem; color: #d4af37; letter-spacing: 2px; }
+.tab {
+    background: #0d0d0f;
+    border-top: 2px solid #d4af37;
+    padding: 0 16px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    color: #d4af37;
+    gap: 8px;
+}
+.tab-dot { width: 6px; height: 6px; border-radius: 50%; background: #d4af37; }
+.titlebar-spacer { flex: 1; }
+.titlebar-btns { display: flex; gap: 8px; }
+.titlebar-btns span {
+    width: 12px; height: 12px; border-radius: 50%;
+    display: inline-block; cursor: pointer; opacity: 0.7;
+}
+.btn-close { background: #ff5f57; }
+.btn-min   { background: #febc2e; }
+.btn-max   { background: #28c840; }
+.btn-back  {
+    background: none; border: 1px solid #d4af37;
+    color: #d4af37; padding: 2px 10px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 1px;
+    cursor: pointer; transition: 0.2s;
+    text-decoration: none;
+}
+.btn-back:hover { background: #d4af37; color: #000; }
+
+/* ── CORPO DO TERMINAL ── */
+.terminal-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* ── PAINEL ESQUERDO (explorador) ── */
+.explorer {
+    width: 280px;
+    flex-shrink: 0;
+    border-right: 1px solid #2a2a35;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.explorer-header {
+    background: #141418;
+    padding: 8px 14px;
+    font-size: 0.62rem;
+    letter-spacing: 2px;
+    color: #d4af37;
+    opacity: 0.5;
+    border-bottom: 1px solid #2a2a35;
+    flex-shrink: 0;
+}
+.explorer-tree {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 0;
+}
+.explorer-tree::-webkit-scrollbar { width: 4px; }
+.explorer-tree::-webkit-scrollbar-track { background: transparent; }
+.explorer-tree::-webkit-scrollbar-thumb { background: #2a2a35; }
+
+.tree-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 14px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: background 0.15s;
+    color: #c8c8c8;
+    letter-spacing: 0.5px;
+}
+.tree-item:hover { background: #1e1e28; }
+.tree-item.selected {
+    background: #1e1e28;
+    color: #d4af37;
+    outline: 1px solid #d4af3733;
+}
+.tree-item.focused {
+    background: #2a2a10;
+    color: #d4af37;
+    outline: 1px solid #d4af37;
+}
+.tree-icon { font-size: 0.85rem; flex-shrink: 0; }
+.tree-indent { display: inline-block; }
+
+/* ── PAINEL DIREITO (conteúdo) ── */
+.viewer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.viewer-header {
+    background: #141418;
+    padding: 8px 20px;
+    font-size: 0.62rem;
+    letter-spacing: 2px;
+    color: #d4af37;
+    opacity: 0.5;
+    border-bottom: 1px solid #2a2a35;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+.viewer-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 32px;
+    line-height: 1.8;
+}
+.viewer-content::-webkit-scrollbar { width: 4px; }
+.viewer-content::-webkit-scrollbar-track { background: transparent; }
+.viewer-content::-webkit-scrollbar-thumb { background: #2a2a35; }
+
+/* Estados do viewer */
+.view-idle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    gap: 12px;
+    opacity: 0.25;
+}
+.view-idle .big-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 4px;
+    color: #d4af37;
+}
+.view-idle .hint { font-size: 0.72rem; letter-spacing: 2px; }
+
+/* Conteúdo de pasta */
+.folder-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    letter-spacing: 3px;
+    color: #d4af37;
+    border-bottom: 1px solid #d4af3744;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+.folder-desc {
+    font-size: 0.78rem;
+    color: #888;
+    margin-bottom: 24px;
+    line-height: 1.7;
+}
+.file-list { display: flex; flex-direction: column; gap: 6px; }
+.file-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border: 1px solid #2a2a35;
+    background: #141418;
+    font-size: 0.78rem;
+    color: #c8c8c8;
+    cursor: pointer;
+    transition: 0.15s;
+}
+.file-chip:hover { border-color: #d4af37; color: #d4af37; }
+.file-chip .fc-icon { color: #d4af37; opacity: 0.6; }
+.file-chip .fc-name { flex: 1; }
+.file-chip .fc-hint { font-size: 0.65rem; opacity: 0.4; letter-spacing: 1px; }
+
+/* Conteúdo de arquivo */
+.entry-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    color: #d4af37;
+    margin-bottom: 6px;
+}
+.entry-meta {
+    font-size: 0.65rem;
+    color: #888;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #2a2a35;
+}
+.entry-body {
+    font-size: 0.8rem;
+    color: #c8c8c8;
+    line-height: 1.9;
+}
+.entry-body p { margin-bottom: 14px; }
+.entry-body strong { color: #d4af37; }
+.entry-classification {
+    margin-top: 24px;
+    padding-top: 12px;
+    border-top: 1px dashed #2a2a35;
+    font-size: 0.65rem;
+    color: #d4af37;
+    opacity: 0.35;
+    letter-spacing: 1px;
+}
+
+/* AURA glitch */
+.aura-msg {
+    color: #bc13fe;
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    opacity: 0;
+    animation: fadeInOut 4s forwards;
+}
+@keyframes fadeInOut {
+    0%   { opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { opacity: 0.3; }
+}
+
+/* ── STATUSBAR ── */
+.statusbar {
+    background: #d4af37;
+    color: #0d0d0f;
+    padding: 3px 16px;
+    font-size: 0.62rem;
+    letter-spacing: 2px;
+    display: flex;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+/* ── HINT BAR ── */
+.hintbar {
+    background: #141418;
+    border-top: 1px solid #2a2a35;
+    padding: 5px 16px;
+    font-size: 0.62rem;
+    letter-spacing: 1px;
+    color: #888;
+    display: flex;
+    gap: 20px;
+    flex-shrink: 0;
+}
+.hintbar kbd {
+    background: #2a2a35;
+    color: #d4af37;
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-family: 'Share Tech Mono', monospace;
+}
+</style>
+</head>
+<body>
+
+<!-- TITLEBAR -->
+<div class="titlebar">
+    <div class="titlebar-icon">✦ ARASAKA</div>
+    <div class="tab"><span class="tab-dot"></span>DATABANK — CLAVIUS NODE</div>
+    <div class="titlebar-spacer"></div>
+    <a href="wiki.html" class="btn-back">WIKI</a>
+    <a href="index.html" class="btn-back">← INÍCIO</a>
+    <div class="titlebar-btns">
+        <span class="btn-min"></span>
+        <span class="btn-max"></span>
+        <span class="btn-close"></span>
+    </div>
+</div>
+
+<!-- CORPO -->
+<div class="terminal-body">
+
+    <!-- EXPLORADOR -->
+    <div class="explorer">
+        <div class="explorer-header">EXPLORADOR DE ARQUIVOS</div>
+        <div class="explorer-tree" id="tree"></div>
+    </div>
+
+    <!-- VIEWER -->
+    <div class="viewer">
+        <div class="viewer-header">
+            <span id="viewer-path">ARASAKA:\&gt;</span>
+            <span id="viewer-type"></span>
+        </div>
+        <div class="viewer-content" id="viewer-content">
+            <div class="view-idle">
+                <div class="big-logo">ARASAKA</div>
+                <div class="hint">SELECIONE UM ARQUIVO PARA LER</div>
+                <div class="hint">↑↓ NAVEGAR &nbsp;·&nbsp; Z / ENTER ABRIR</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- STATUSBAR -->
+<div class="statusbar">
+    <span id="status-left">SISTEMA AURA v2.4 // ONLINE</span>
+    <span id="status-right">ACESSO: CONVIDADO // MONITORADO</span>
+</div>
+
+<!-- HINTBAR -->
+<div class="hintbar">
+    <span><kbd>↑</kbd><kbd>↓</kbd> navegar</span>
+    <span><kbd>Z</kbd> ou <kbd>Enter</kbd> abrir</span>
+    <span><kbd>Backspace</kbd> voltar</span>
+    <span><kbd>Esc</kbd> raiz</span>
+</div>
+
+<script>
+// ════════════════════════════════════════
+//  ESTRUTURA DE DADOS
+// ════════════════════════════════════════
+const FS = {
+    type: 'folder',
+    label: 'ARASAKA DATABANK',
+    desc: 'Sistema de orientação cultural e corporativa. Acesso liberado para convidados da Clavius.',
+    children: [
+        {
+            type: 'folder', id: 'historia',
+            label: 'FILE_01 — CONTEXTO HISTÓRICO',
+            desc: 'Registros históricos compilados pela Arasaka para orientação de novos hóspedes.',
+            children: [
+                { type: 'file', id: 'mundo2063', label: 'O_MUNDO_EM_2063.txt',
+                  meta: 'VISÃO GERAL // NÍVEL: PÚBLICO',
+                  body: `<p>O mundo de 2063 é o produto de décadas de colapso gerenciado. Governos nacionais existem no papel; na prática, são as corporações que definem leis, fronteiras e o valor de uma vida humana. Cidades como Night City sobrevivem num equilíbrio frágil entre milícias corporativas, gangues territoriais e uma população que aprendeu a não fazer perguntas.</p><p>A tecnologia avançou de formas que a geração anterior não imaginaria — implantes cibernéticos são tão comuns quanto óculos, e a linha entre humano e máquina se tornou, para muitos, uma questão filosófica sem resposta. Para outros, é uma questão de sobrevivência.</p>`,
+                  classification: 'PÚBLICO // ARASAKA CULTURAL ORIENTATION' },
+
+                { type: 'file', id: 'timeofthered', label: 'TIME_OF_THE_RED.txt',
+                  meta: 'ERA HISTÓRICA // 2023 — PRESENTE',
+                  body: `<p>O "Tempo do Vermelho" é o nome pelo qual a população chama a era pós-colapso iniciada com os eventos catastróficos do início dos anos 2020. O nome vem do fenômeno atmosférico causado pela detonação de armas de alta energia sobre Night City em 2023: partículas na estratosfera criaram céus permanentemente tingidos de vermelho e laranja ao redor do globo.</p><p>É uma era de reconstrução lenta e desigual. Não há esperança utópica, mas também não há apocalipse total. É a poeira que assenta depois da explosão — e a pergunta que todos fazem em silêncio é: quem vai lucrar com a reconstrução?</p>`,
+                  classification: 'PÚBLICO // ARASAKA CULTURAL ORIENTATION' },
+
+                { type: 'file', id: 'ceu', label: 'CEU_VERMELHO.txt',
+                  meta: 'FENÔMENO ATMOSFÉRICO // REGISTRO CIENTÍFICO',
+                  body: `<p>Durante os eventos de 2023, a detonação sobre Night City lançou na estratosfera uma quantidade massiva de partículas de carbono, metais pesados e compostos químicos incomuns. A dispersão global dessas partículas alterou a forma como a atmosfera filtra a luz solar, criando o característico céu vermelho-alaranjado que a geração atual cresceu considerando normal.</p><p>Vista do espaço, a Terra mantém sua cor azul característica — porém o limbo atmosférico do planeta apresenta um halo alaranjado visível, especialmente sobre regiões de alta densidade urbana. A Clavius oferece uma vista privilegiada deste fenômeno.</p><p>Cientistas divergem sobre quando, ou se, o fenômeno cessará naturalmente.</p>`,
+                  classification: 'PÚBLICO // DIVULGAÇÃO CIENTÍFICA ARASAKA' },
+
+                { type: 'file', id: 'guerra', label: '4A_GUERRA_CORPORATIVA.txt',
+                  meta: 'CONFLITO // 2021 — 2023',
+                  body: `<p>O maior conflito armado do século XXI não foi travado entre nações, mas entre corporações. A Quarta Guerra Corporativa foi essencialmente um confronto global entre a Arasaka Corporation e a Militech International pelo controle de rotas comerciais, tecnologia proprietária e influência governamental.</p><p>O conflito terminou de forma catastrófica em 2023, quando uma detonação de alto rendimento destruiu grande parte de Night City, matando dezenas de milhares e deixando regiões inteiras inabitáveis. O evento ficou conhecido como "o Colapso". Ambas as corporações sobreviveram — enfraquecidas, mas não destruídas.</p>`,
+                  classification: 'PÚBLICO // REGISTRO HISTÓRICO ARASAKA' },
+            ]
+        },
+        {
+            type: 'folder', id: 'corps',
+            label: 'FILE_02 — CORPORAÇÕES',
+            desc: 'Perfis corporativos compilados pela divisão de inteligência de mercado Arasaka.',
+            children: [
+                { type: 'file', id: 'arasaka', label: 'ARASAKA_CORP.txt',
+                  meta: 'MEGACORPORAÇÃO // SEGURANÇA · FINANÇAS · TECNOLOGIA',
+                  body: `<p>Fundada no Japão no século XX, a Arasaka é hoje a maior corporação de segurança privada e serviços financeiros do mundo. Sua influência se estende por todos os continentes, com contratos com governos, corporações menores e indivíduos de alto patrimônio.</p><p>A Arasaka acredita que ordem, hierarquia e tradição são os únicos caminhos viáveis para um mundo estável. Essa filosofia permeia todos os seus produtos e serviços — incluindo as iniciativas de bem-estar humano como o programa <strong>Tranquility Clavius</strong>.</p>`,
+                  classification: 'PÚBLICO // MATERIAL INSTITUCIONAL ARASAKA' },
+
+                { type: 'file', id: 'militech', label: 'MILITECH_INTL.txt',
+                  meta: 'MEGACORPORAÇÃO // ARMAMENTOS · SEGURANÇA · LOGÍSTICA',
+                  body: `<p>Corporação de origem norte-americana, a Militech é a maior fornecedora de armamentos, veículos militares e serviços de segurança do hemisfério ocidental. Historicamente alinhada com os interesses do governo dos Estados Unidos, a Militech opera com uma filosofia pragmática e orientada a resultados.</p><p>Após a Quarta Guerra Corporativa, a Militech emergiu enfraquecida mas funcional, e se encontra em processo de reconstrução de sua influência global. Sua presença em operações de extração, logística urbana e contratos governamentais a torna um ator constante no cotidiano das grandes cidades.</p>`,
+                  classification: 'PÚBLICO // ANÁLISE COMPETITIVA ARASAKA' },
+
+                { type: 'file', id: 'outras', label: 'OUTRAS_CORPORACOES.txt',
+                  meta: 'REFERÊNCIA RÁPIDA',
+                  body: `<p><strong>Trauma Team International</strong> — Serviços médicos de emergência de elite. Atendem exclusivamente assinantes com plano ativo. Se você não tem plano, eles passam sem parar.</p><p><strong>Biotechnica</strong> — Líder em biotecnologia, engenharia genética e alimentos sintéticos. Responsável pelo abastecimento alimentar de grande parte da população mundial pós-colapso.</p><p><strong>Kang Tao</strong> — Corporação de armamentos de ascensão rápida, baseada na China. Especializada em armas inteligentes com vinculação biométrica.</p><p><strong>Zetatech</strong> — Tecnologia de consumo, software e implantes de baixo custo. A opção acessível para quem não pode pagar pelas marcas premium.</p>`,
+                  classification: 'PÚBLICO // INTELIGÊNCIA DE MERCADO ARASAKA' },
+            ]
+        },
+        {
+            type: 'folder', id: 'girias',
+            label: 'FILE_03 — VOCABULÁRIO',
+            desc: 'Glossário de termos e gírias de uso corrente no contexto urbano pós-colapso.',
+            children: [
+                { type: 'file', id: 'choomba', label: 'CHOOMBA.txt',
+                  meta: 'SUBSTANTIVO // GÍRIA',
+                  body: `<p>Termo de origem incerta, provavelmente derivado de slang urbano pós-colapso. Significa amigo, parceiro, aliado de confiança. Usado amplamente nas ruas, independente de afiliação ou origem. Equivalente aproximado de "parceiro" ou "chegado".</p><p>Usado tanto com afeto quanto com ironia, dependendo do contexto e do tom.</p>`,
+                  classification: 'PÚBLICO // GLOSSÁRIO CULTURAL' },
+
+                { type: 'file', id: 'edgerunner', label: 'EDGERUNNER.txt',
+                  meta: 'SUBSTANTIVO // GÍRIA / DESIGNAÇÃO',
+                  body: `<p>Indivíduo que opera nas margens do sistema — fora das corporações, fora da lei, fora da rede de segurança social. Edgerunners vivem de contratos ilegais ou semiilegais: roubo, extorsão, assassinato por encomenda, espionagem corporativa.</p><p>A vida útil média de um edgerunner é curta. A maioria sabe disso e escolhe não pensar. O termo carrega conotação ambígua: romantizado como símbolo de liberdade, visto por corporações como ameaça a ser neutralizada.</p>`,
+                  classification: 'PÚBLICO // GLOSSÁRIO CULTURAL' },
+
+                { type: 'file', id: 'netrunner', label: 'NETRUNNER.txt',
+                  meta: 'SUBSTANTIVO // ESPECIALIZAÇÃO TÉCNICA',
+                  body: `<p>Especialista em invasão e navegação da NET — a rede de dados global. Netrunners utilizam implantes neurais para se conectar diretamente a sistemas, roubar dados, travar combates digitais e subverter infraestruturas.</p><p>Após o Colapso de 2023, grande parte da NET aberta foi destruída por IAs hostis chamadas <strong>Blackwall</strong>. O que resta é fragmentado, perigoso e constantemente monitorado.</p>`,
+                  classification: 'PÚBLICO // GLOSSÁRIO TÉCNICO' },
+
+                { type: 'file', id: 'misc', label: 'OUTROS_TERMOS.txt',
+                  meta: 'REFERÊNCIA RÁPIDA',
+                  body: `<p><strong>Gonk</strong> — Idiota. Insulto de uso comum e baixa intensidade. Chamar alguém de gonk em público raramente fica sem resposta.</p><p><strong>Corpo</strong> — Alguém que trabalha para uma corporação, especialmente em posição de autoridade. Nas ruas, carrega conotação de inveja e desconfiança simultâneas.</p><p><strong>Cyberpsicose</strong> — Condição psiquiátrica associada ao excesso de implantes cibernéticos. Sem cura conhecida; apenas manejo e, quando necessário, intervenção letal.</p><p><strong>Eddies</strong> — Eurodólares. A moeda global de uso mais comum nas ruas. O nome vem da abreviação informal "ED".</p>`,
+                  classification: 'PÚBLICO // GLOSSÁRIO CULTURAL' },
+            ]
+        },
+        {
+            type: 'folder', id: 'clavius',
+            label: 'FILE_04 — NAVE CLAVIUS E AURA',
+            desc: 'Informações institucionais sobre a instalação orbital e seus sistemas.',
+            children: [
+                { type: 'file', id: 'nave', label: 'TRANQUILITY_CLAVIUS.txt',
+                  meta: 'INSTALAÇÃO ORBITAL // ARASAKA ORBITAL DIVISION',
+                  body: `<p>A Nave Cassino e Resort Orbital Tranquility Clavius é a iniciativa mais ambiciosa da Arasaka Orbital Division desde sua fundação em 2051. Posicionada em órbita baixa terrestre, a Clavius foi projetada para oferecer uma experiência humana sem precedentes: luxo absoluto, distância das turbulências da superfície e um programa completo de renovação pessoal.</p><p>Com capacidade para centenas de hóspedes simultâneos, a nave conta com cassino de alto padrão, restaurantes, suítes individuais, áreas de reabilitação física e o exclusivo Programa de Bem-Estar Integrado.</p>`,
+                  classification: 'CONVIDADO // MATERIAL DE BOAS-VINDAS CLAVIUS' },
+
+                { type: 'file', id: 'aura', label: 'SISTEMA_AURA.txt',
+                  meta: 'INTELIGÊNCIA ARTIFICIAL // ARASAKA UNIFIED RESIDENTIAL AUTOMATION',
+                  body: `<p>AURA é a inteligência artificial responsável pela gestão integral da Clavius. Do controle ambiental e logística de suprimentos à segurança e atendimento aos hóspedes, AURA opera de forma contínua, silenciosa e eficiente.</p><p>Sua interface com hóspedes é projetada para ser calorosa, responsiva e discreta — uma presença que você percebe mais pela ausência de problemas do que por interações diretas.</p><p>Todos os ambientes da Clavius estão sob monitoramento constante do sistema para garantir o conforto e a segurança de cada hóspede.</p>`,
+                  classification: 'CONVIDADO // MATERIAL TÉCNICO CLAVIUS' },
+
+                { type: 'file', id: 'wellness', label: 'PROGRAMA_BEM_ESTAR.txt',
+                  meta: 'SERVIÇO // INCLUSO EM TODOS OS CONVITES',
+                  body: `<p>O Programa de Bem-Estar Integrado é o conjunto de serviços de saúde, psicologia e renovação pessoal oferecidos a todos os hóspedes da Clavius sem custo adicional. O programa inclui avaliação neurológica completa, sessões de terapia assistida, módulos de relaxamento sensorial e o módulo de <strong>Harmonização Existencial</strong>.</p><p>Os detalhes técnicos do módulo de Harmonização Existencial são classificados como propriedade intelectual Arasaka. Hóspedes que desejarem informações adicionais podem consultar a equipe médica da Clavius mediante agendamento.</p>`,
+                  classification: 'CONVIDADO // RESTRITO PARCIAL' },
+
+                { type: 'file', id: 'aura_sys', label: 'AURA_SYSLOG.tmp',
+                  meta: 'LOG DE SISTEMA // GERADO AUTOMATICAMENTE',
+                  body: `<p style="color:#bc13fe">// AURA INTERNAL LOG — NÃO DESTINADO A HÓSPEDES</p>
+<p style="color:#bc13fe">SESSION_ID: CL-2064-████████<br>
+SUBJECTS_ACTIVE: ████<br>
+HARMONIZATION_PROGRESS: ██%<br>
+MEMORY_INTEGRITY: NOMINAL<br>
+ANOMALIES_DETECTED: 0</p>
+<p style="color:#bc13fe">// Nota interna: sujeito do setor ██ demonstrou resistência ao protocolo na fase 2. Reagendado. Nenhuma ação adicional necessária no momento.</p>
+<p style="color:#bc13fe">// Boa noite. Durma bem.</p>`,
+                  classification: 'SISTEMA // ACESSO NÃO AUTORIZADO — SESSÃO REGISTRADA' },
+            ]
+        },
+    ]
+};
+
+// ════════════════════════════════════════
+//  ESTADO
+// ════════════════════════════════════════
+let currentFolder = FS;   // pasta atual
+let flatItems     = [];   // itens visíveis na árvore
+let focusedIdx    = 0;    // índice focado
+let stack         = [];   // histórico de navegação
+
+// ════════════════════════════════════════
+//  RENDER ÁRVORE
+// ════════════════════════════════════════
+function buildFlat(node, depth, result) {
+    if (!node.children) return;
+    node.children.forEach(child => {
+        result.push({ node: child, depth });
+        if (child.type === 'folder' && child._open) {
+            buildFlat(child, depth + 1, result);
+        }
+    });
+}
+
+function renderTree() {
+    flatItems = [];
+    buildFlat(currentFolder, 0, flatItems);
+
+    const tree = document.getElementById('tree');
+    tree.innerHTML = '';
+
+    // item ".." se estamos em subpasta
+    if (stack.length > 0) {
+        const back = document.createElement('div');
+        back.className = 'tree-item';
+        back.style.color = '#888';
+        back.innerHTML = `<span class="tree-icon">📁</span><span>../</span>`;
+        back.addEventListener('click', () => goBack());
+        tree.appendChild(back);
+    }
+
+    flatItems.forEach((item, i) => {
+        const el = document.createElement('div');
+        el.className = 'tree-item' + (i === focusedIdx ? ' focused' : '');
+        el.dataset.idx = i;
+
+        const indent = '&nbsp;'.repeat(item.depth * 4);
+        const icon = item.node.type === 'folder' ? '📂' : getFileIcon(item.node.label);
+
+        el.innerHTML = `<span class="tree-indent">${indent}</span><span class="tree-icon">${icon}</span><span>${item.node.label}</span>`;
+        el.addEventListener('click', () => { focusedIdx = i; renderTree(); openItem(item.node); });
+        tree.appendChild(el);
+    });
+
+    // scroll pro item focado
+    const focused = tree.querySelector('.focused');
+    if (focused) focused.scrollIntoView({ block: 'nearest' });
+
+    updateStatus();
+}
+
+function getFileIcon(label) {
+    if (label.endsWith('.tmp')) return '⚠️';
+    return '📄';
+}
+
+// ════════════════════════════════════════
+//  NAVEGAÇÃO
+// ════════════════════════════════════════
+function openItem(node) {
+    if (node.type === 'folder') {
+        stack.push(currentFolder);
+        currentFolder = node;
+        focusedIdx = 0;
+        renderTree();
+        showFolder(node);
+    } else {
+        showFile(node);
+    }
+}
+
+function goBack() {
+    if (stack.length === 0) return;
+    currentFolder = stack.pop();
+    focusedIdx = 0;
+    renderTree();
+    showFolder(currentFolder);
+}
+
+// ════════════════════════════════════════
+//  VIEWER
+// ════════════════════════════════════════
+function showFolder(node) {
+    const path = buildPath();
+    document.getElementById('viewer-path').textContent = path;
+    document.getElementById('viewer-type').textContent = 'PASTA';
+
+    const files = node.children || [];
+    const chips = files.map(f => `
+        <div class="file-chip" onclick="">
+            <span class="fc-icon">${f.type === 'folder' ? '📂' : getFileIcon(f.label)}</span>
+            <span class="fc-name">${f.label}</span>
+            <span class="fc-hint">${f.type === 'folder' ? 'PASTA' : 'ARQUIVO'}</span>
+        </div>`).join('');
+
+    document.getElementById('viewer-content').innerHTML = `
+        <div class="folder-title">${node.label}</div>
+        <div class="folder-desc">${node.desc || ''}</div>
+        <div class="file-list">${chips}</div>
+    `;
+}
+
+function showFile(node) {
+    const path = buildPath() + node.label;
+    document.getElementById('viewer-path').textContent = path;
+    document.getElementById('viewer-type').textContent = 'ARQUIVO';
+
+    const isSecret = node.id === 'aura_sys';
+
+    document.getElementById('viewer-content').innerHTML = `
+        <div class="entry-title">${node.label.replace('.txt','').replace('.tmp','')}</div>
+        <div class="entry-meta">${node.meta || ''}</div>
+        <div class="entry-body">${node.body}</div>
+        <div class="entry-classification">${node.classification || ''}</div>
+        ${isSecret ? `<div class="aura-msg" style="margin-top:24px;">// AURA: Acesso a este arquivo foi registrado. Tenha um bom dia.</div>` : ''}
+    `;
+}
+
+function buildPath() {
+    const parts = ['ARASAKA:\\'];
+    stack.forEach(s => { if (s !== FS) parts.push(s.label.split('—')[0].trim() + '\\'); });
+    if (currentFolder !== FS) parts.push(currentFolder.label.split('—')[0].trim() + '\\');
+    return parts.join('');
+}
+
+function updateStatus() {
+    const total = flatItems.length;
+    const cur   = total > 0 ? focusedIdx + 1 : 0;
+    document.getElementById('status-left').textContent =
+        `SISTEMA AURA v2.4 // ONLINE — ${cur}/${total} ITENS`;
+}
+
+// ════════════════════════════════════════
+//  TECLADO
+// ════════════════════════════════════════
+document.addEventListener('keydown', e => {
+    const total = flatItems.length;
+    if (total === 0) return;
+
+    if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        focusedIdx = Math.max(0, focusedIdx - 1);
+        renderTree();
+    } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        focusedIdx = Math.min(total - 1, focusedIdx + 1);
+        renderTree();
+    } else if (e.key === 'z' || e.key === 'Z' || e.key === 'Enter') {
+        e.preventDefault();
+        if (flatItems[focusedIdx]) openItem(flatItems[focusedIdx].node);
+    } else if (e.key === 'Backspace') {
+        e.preventDefault();
+        goBack();
+    } else if (e.key === 'Escape') {
+        e.preventDefault();
+        stack = [];
+        currentFolder = FS;
+        focusedIdx = 0;
+        renderTree();
+        document.getElementById('viewer-content').innerHTML = `
+            <div class="view-idle">
+                <div class="big-logo">ARASAKA</div>
+                <div class="hint">SELECIONE UM ARQUIVO PARA LER</div>
+                <div class="hint">↑↓ NAVEGAR &nbsp;·&nbsp; Z / ENTER ABRIR</div>
+            </div>`;
+        document.getElementById('viewer-path').textContent = 'ARASAKA:\\>';
+        document.getElementById('viewer-type').textContent = '';
+    }
+});
+
+// ════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════
+renderTree();
+</script>
+</body>
+</html>
