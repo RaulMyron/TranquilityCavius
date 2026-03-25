@@ -1,3 +1,3 @@
-# TranquilityCavius
+# TranquilityClavius
 
-https://raulmyron.github.io/TranquilityCavius/
+https://raulmyron.github.io/TranquilityClavius/
