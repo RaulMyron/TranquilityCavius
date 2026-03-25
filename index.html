@@ -3,61 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TRANQUILITY_CLAVIUS_ADMISSION</title>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron:wght@500;700&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+    <title>TRANQUILITY_CLAVIUS_v8.4.1</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron:wght@500;700&family=Cinzel:wght@400;700&family=Montserrat:wght@100;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
+            /* MODO INICIAL: NEO-KITSCH (Isca) */
             --bg-color: #fdfdfd;
-            --primary: #d4af37;
+            --primary: #d4af37;   /* Ouro Sedutor */
+            --secondary: #222;
             --text: #1a1a1a;
+            --box-bg: rgba(255, 255, 255, 0.96);
+            --scanline: rgba(0, 0, 0, 0.05);
             --font-main: 'Cinzel', serif;
-            --box-bg: rgba(255, 255, 255, 0.95);
+            --font-title: 'Cinzel', serif;
+            --accent-glow: 0 0 10px rgba(212, 175, 55, 0.3);
         }
 
+        /* MODO TERMINAL (Cybertech 2063) */
         .dark-mode {
-            --bg-color: #020205;
-            --primary: #bc13fe;
+            --bg-color: #020205; /* Preto Absoluto */
+            --primary: #bc13fe;   /* Roxo Neon */
+            --secondary: #00e5ff; /* Ciano Tech */
             --text: #e0e0e0;
+            --box-bg: rgba(5, 5, 10, 0.95);
+            --scanline: rgba(188, 19, 254, 0.15);
             --font-main: 'VT323', monospace;
-            --box-bg: rgba(10, 10, 20, 0.9);
+            --font-title: 'Orbitron', sans-serif;
+            --accent-glow: 0 0 15px rgba(188, 19, 254, 0.4);
         }
+
+        /* MODO RED ROOM (Bioshock/Twin Peaks Minimalist Aesthetic) */
+        .red-room-mode {
+            --bg-color: #3e0303; /* Vermelho Sangue Escuro */
+            --primary: #000000;   /* Preto Total */
+            --secondary: #ffffff; /* Branco Puro */
+            --text: #0a0a0a;
+            --box-bg: rgba(0, 0, 0, 0.85); /* Caixa preta */
+            --scanline: rgba(255, 255, 255, 0.02);
+            --font-main: 'Montserrat', sans-serif; /* Minimalismo puro */
+            --font-title: 'Montserrat', sans-serif;
+            --accent-glow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+
+        * { box-sizing: border-box; }
 
         body, html {
             margin: 0; padding: 0;
+            width: 100%; min-height: 100vh;
             background-color: var(--bg-color);
             color: var(--text);
-            min-height: 100vh;
-            display: flex; align-items: center; justify-content: center;
             font-family: var(--font-main);
-            transition: all 0.5s ease;
-            overflow: hidden;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; align-items: center; justify-content: center;
+            overflow-x: hidden;
         }
 
-        /* Scanlines Clássicas */
+        /* Scanlines adaptáveis */
         body::before {
             content: " "; display: block; position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
-            z-index: 10; background-size: 100% 4px; pointer-events: none;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(var(--scanline) 50%, transparent 50%);
+            z-index: 100; background-size: 100% 4px; pointer-events: none;
         }
 
         .wrapper {
-            width: 100%; max-width: 600px;
-            padding: 20px; display: flex; flex-direction: column; gap: 20px;
-            position: relative; z-index: 5;
+            width: 95%; max-width: 600px;
+            position: relative; z-index: 50;
+            display: flex; flex-direction: column; gap: 15px;
+            padding: 30px 0;
         }
 
-        /* Botão de Som Discreto no Topo */
-        .audio-toggle {
-            text-align: center;
-        }
-
-        .btn-audio {
+        /* Botão Play/Pause Central */
+        .audio-ctrl { text-align: center; margin-bottom: 5px; }
+        .btn-play {
             background: none; border: 1px solid var(--primary);
-            color: var(--primary); padding: 5px 15px;
-            font-size: 0.7rem; cursor: pointer; letter-spacing: 2px;
+            color: var(--primary); padding: 10px 25px;
+            font-family: 'Orbitron', sans-serif; cursor: pointer;
+            font-size: 0.75rem; letter-spacing: 3px; transition: 0.3s;
         }
+        .btn-play:hover { background: var(--primary); color: var(--bg-color); }
 
         .header-ui {
             display: flex; justify-content: space-between; align-items: center;
@@ -65,117 +90,188 @@
         }
 
         .terminal {
-            width: 100%; background: var(--box-bg);
-            border: 2px solid var(--primary); padding: 35px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            background: var(--box-bg);
+            border: 2px solid var(--primary);
+            padding: 40px; width: 100%;
+            box-shadow: var(--accent-glow);
             display: flex; flex-direction: column; gap: 20px;
+            position: relative;
+            transition: all 0.3s ease;
         }
 
-        h1 { font-family: 'Orbitron', sans-serif; font-size: clamp(1.4rem, 5vw, 2rem); color: var(--primary); text-align: center; margin: 0; letter-spacing: 4px; }
-
-        .luxe-options {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
-            font-size: 0.95rem; font-style: italic; opacity: 0.9;
+        /* Glitch Subliminar no Título */
+        @keyframes subliminal {
+            0%, 94%, 100% { opacity: 1; filter: none; }
+            95% { opacity: 0.5; filter: invert(1) sepia(1) hue-rotate(-50deg); }
         }
+        h1 { 
+            font-family: var(--font-title); text-align: center; margin: 0; 
+            color: var(--primary); letter-spacing: 5px; 
+            animation: subliminal 12s infinite; font-size: 1.8rem;
+        }
+
+        .red-room-mode h1 { font-weight: 100; color: #000; text-shadow: none; letter-spacing: 8px; font-size: 1.6rem; }
+
+        .promo-text { text-align: center; font-size: 1.2rem; font-weight: 200; border-bottom: 1px dotted var(--primary); padding-bottom: 15px; }
+        .red-room-mode .promo-text { color: #fff; border-bottom: none; font-style: italic; font-weight: 400; }
+
+        .luxe-list { font-style: italic; font-size: 1rem; line-height: 1.6; color: var(--text); }
+        .red-room-mode .luxe-list { color: #fff; font-style: normal; font-weight: 100; font-size: 0.9rem; }
 
         .btn-claim {
-            width: 100%; padding: 20px;
+            width: 100%; padding: 18px;
             background: none; border: 2px solid var(--primary);
             color: var(--primary); font-family: 'Orbitron', sans-serif;
-            font-size: 0.9rem; cursor: pointer; transition: 0.4s;
+            cursor: pointer; transition: 0.4s; font-size: 0.9rem;
+            text-transform: uppercase;
         }
+        .btn-claim:hover { background: var(--primary); color: var(--bg-color); box-shadow: var(--accent-glow); }
+        .red-room-mode .btn-claim { border: 1px solid #000; color: #fff; font-family: 'Montserrat'; font-weight: 100; }
+        .red-room-mode .btn-claim:hover { background: #000; color: #fff; }
 
-        .btn-claim:hover { background: var(--primary); color: #fff; box-shadow: 0 0 20px var(--primary); }
-
-        /* Estilo do Bilhete (Aparece ao clicar) */
-        #ticket {
-            display: none; border-top: 2px dashed var(--primary);
-            padding-top: 20px; margin-top: 10px; font-family: 'VT323', monospace;
-            text-align: left; animation: fadeIn 1s ease;
+        /* Overlay de Escaneamento */
+        #scanner {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 1000; color: #bc13fe;
+            align-items: center; justify-content: center; font-family: 'VT323'; text-align: center;
         }
+        .red-room-mode #scanner { color: red; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .footer-ui { display: flex; justify-content: space-between; font-size: 0.7rem; opacity: 0.8; padding-top: 10px; }
+        .red-room-mode .footer-ui { color: #fff; opacity: 0.5; font-weight: 100; }
+        
+        #yt-player { position: absolute; top: -999px; }
 
-        .footer-ui { display: flex; justify-content: space-between; font-size: 0.7rem; opacity: 0.7; }
+        input[type=range] { accent-color: var(--primary); width: 60px; vertical-align: middle; }
     </style>
 </head>
 <body>
 
+<div id="scanner">
+    <div>
+        <h2 id="scan-text">INICIANDO ESCANEAMENTO DE RETINA...</h2>
+        <p id="scan-percent">0%</p>
+    </div>
+</div>
+
 <div class="wrapper">
-    <div class="audio-toggle">
-        <button class="btn-audio" onclick="playMusic()" id="audioBtn">
-            <i class="fas fa-play"></i> ATIVAR SOM AMBIENTE
+    <div class="audio-ctrl">
+        <button class="btn-play" onclick="toggleAudio()">
+            <i id="play-icon" class="fas fa-play"></i> ATIVAR SOM AMBIENTE
         </button>
     </div>
 
     <div class="header-ui">
-        <button onclick="toggleMode()" style="background:none; border:1px solid var(--primary); color:var(--primary); cursor:pointer; font-size: 0.7rem;" id="modeBtn">MODO_TERMINAL</button>
-        <div style="display:flex; align-items:center; gap:5px;">
-            <i class="fas fa-volume-low" style="color:var(--primary); font-size:0.7rem;"></i>
-            <input type="range" min="0" max="1" step="0.1" value="0.4" oninput="document.getElementById('bgMusic').volume = this.value">
+        <button onclick="cycleMode()" style="background:none; border:1px solid var(--primary); color:var(--primary); cursor:pointer; font-family:inherit; font-size: 0.7rem;" id="modeBtn">VISUALIZAR_TERMINAL</button>
+        <div style="font-size: 0.7rem;">
+            VOL: <input type="range" min="0" max="1" step="0.1" value="0.4" oninput="updateVol(this.value)">
         </div>
     </div>
 
-    <main class="terminal" id="mainTerminal">
-        <h1>TRANQUILITY CLAVIUS</h1>
+    <main class="terminal">
+        <h1 id="title">TRANQUILITY CLAVIUS</h1>
+        <div class="promo-text">VOCÊ FOI SORTEADO!</div>
         
-        <p style="text-align: center; font-size: 1.1rem; margin: 0;">
-            VOCÊ FOI SORTEADO!<br>
-            <span style="font-size: 0.8rem; opacity: 0.8;">Arasaka Corp © 2063</span>
+        <p style="text-align: center; margin: 0; font-size: 0.9rem;">
+            A Arasaka apresenta o ápice do luxo orbital em 2063.<br>
+            A fase de escassez terminou. A fase de <span style="color:var(--primary)">consagração</span> começa agora.
         </p>
 
-        <div class="luxe-options">
-            • OPORTUNIDADE DE EMPREGO<br>
-            • CHANCE DE FICAR RICO<br>
-            • UM NOVO COMEÇO...<br>
-            • TODOS SÃO BEM-VINDOS.
+        <div class="luxe-list">
+            • Suítes com Harmonização Dopaminérgica.<br>
+            • Fim definitivo de toda ansiedade social.<br>
+            • Luxúria e Êxtase sem limites biológicos.
         </div>
 
-        <button class="btn-claim" id="claimBtn" onclick="generateTicket()">RECLAMAR MINHA CHANCE</button>
-
-        <div id="ticket">
-            <p style="font-weight: bold; border-bottom: 1px solid var(--primary);">BILHETE DE EMBARQUE #2063-X</p>
-            <p>> PASSAGEIRO: CONVIDADO_ID_77<br>
-               > DESTINO: CLAVIUS LUNAR BASE<br>
-               > EXTRAÇÃO: 48 HORAS (MILITECH)<br>
-               > STATUS: AGUARDANDO RECOLHIMENTO</p>
-            <p style="font-size: 0.7rem; text-align: center; border-top: 1px dashed var(--primary); padding-top: 5px;">
-                "NÃO SE PREOCUPE COM AS MALAS. VOCÊ NÃO PRECISARÁ DE NADA."
-            </p>
-        </div>
+        <button class="btn-claim" onclick="initAdmission()">RECLAMAR MINHA CHANCE</button>
     </main>
 
     <div class="footer-ui">
-        <span><i class="fas fa-microchip"></i> ARASAKA_SYSTEMS_2063</span>
-        <span onclick="alert('ERROR: Ajuda indisponível. Por favor, não vá.')" style="cursor:help;"><i class="fas fa-question-circle"></i> AJUDA</span>
+        <span><i class="fas fa-microchip"></i> ARASAKA_SYSTEMS © 2063</span>
+        <span onclick="alert('ERROR: Ajuda indisponível. Eles estão ouvindo...')" style="cursor:help;"><i class="fas fa-question-circle"></i> AJUDA</span>
     </div>
 </div>
 
-<audio id="bgMusic" loop><source src="som.mp3" type="audio/mpeg"></audio>
+<div id="yt-player">
+    <iframe id="video" width="560" height="315" 
+    src="https://www.youtube.com/embed/ID_DO_VIDEO?enablejsapi=1&loop=1&playlist=ID_DO_VIDEO" 
+    frameborder="0"></iframe>
+</div>
 
 <script>
-    const music = document.getElementById('bgMusic');
+    let playing = false;
+    let currentMode = 0; // 0: NeoKitsch, 1: Terminal, 2: RedRoom
+    const video = document.getElementById('video');
 
-    function playMusic() {
-        music.play();
-        document.getElementById('audioBtn').innerHTML = '<i class="fas fa-music"></i> SOM ATIVADO';
-        // Ativa Fullscreen no clique inicial para PC
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(e => {});
+    function toggleAudio() {
+        const icon = document.getElementById('play-icon');
+        const btnText = document.querySelector('.btn-play');
+        if (!playing) {
+            video.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+            icon.className = "fas fa-pause";
+            btnText.innerHTML = '<i class="fas fa-pause"></i> PAUSAR ÁUDIO';
+            playing = true;
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(e=>{});
+        } else {
+            video.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+            icon.className = "fas fa-play";
+            btnText.innerHTML = '<i class="fas fa-play"></i> RETOMAR ÁUDIO';
+            playing = false;
         }
     }
 
-    function toggleMode() {
-        document.body.classList.toggle('dark-mode');
-        document.getElementById('modeBtn').innerText = 
-            document.body.classList.contains('dark-mode') ? "MODO_NEO_KITSCH" : "MODO_TERMINAL";
+    function updateVol(val) {
+        video.contentWindow.postMessage('{"event":"command","func":"setVolume","args":['+ (val*100) +']}', '*');
     }
 
-    function generateTicket() {
-        music.play(); // Garante som ao clicar no botão principal
-        document.getElementById('ticket').style.display = 'block';
-        document.getElementById('claimBtn').style.display = 'none';
-        alert('ADMISSÃO CONFIRMADA.\nSeu bilhete foi gerado abaixo. Uma equipe Militech irá buscá-lo em até 2 dias úteis.');
+    function cycleMode() {
+        const body = document.body;
+        const btn = document.getElementById('modeBtn');
+        
+        currentMode = (currentMode + 1) % 3;
+        
+        // Reseta as classes
+        body.classList.remove('dark-mode', 'red-room-mode');
+        
+        if (currentMode === 0) {
+            btn.innerText = "VISUALIZAR_TERMINAL";
+        } else if (currentMode === 1) {
+            body.classList.add('dark-mode');
+            btn.innerText = "VISUALIZAR_AMNÉSIA";
+        } else if (currentMode === 2) {
+            body.classList.add('red-room-mode');
+            btn.innerText = "VISUALIZAR_NEO_KITSCH";
+            // No modo Red Room, a música sobe automaticamente e o volume também
+            if (!playing) toggleAudio();
+            updateVol(0.6); // Volume sobe para o susto
+            // Alerta minimalista
+            setTimeout(() => {
+                alert('Dr. Aris Thorne te aguarda em seu Ateliê.');
+            }, 600);
+        }
+    }
+
+    function initAdmission() {
+        if (!playing) toggleAudio(); // Toca som ao clicar
+        const scanner = document.getElementById('scanner');
+        const sText = document.getElementById('scan-text');
+        const sPercent = document.getElementById('scan-percent');
+        scanner.style.display = 'flex';
+        
+        let p = 0;
+        let itv = setInterval(() => {
+            p += Math.floor(Math.random() * 15) + 1;
+            if (p >= 100) {
+                p = 100;
+                clearInterval(itv);
+                sText.innerText = "PADRÃO NEURAL SINCRONIZADO. BEM-VINDO A CLAVIUS.";
+                setTimeout(() => {
+                    alert('ADMISSÃO CONFIRMADA.\nMilitech em rota.\n\n"Não se preocupe com o passado. Nós cuidaremos dele para você."');
+                    scanner.style.display = 'none';
+                }, 1500);
+            }
+            sPercent.innerText = p + "%";
+        }, 150);
     }
 </script>
 </body>
