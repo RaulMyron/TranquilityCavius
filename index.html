@@ -11,24 +11,22 @@
             --bg-color: #fdfdfd;
             --primary: #d4af37;
             --text: #1a1a1a;
-            --box-bg: rgba(255, 255, 255, 0.98);
-            --scanline: rgba(0, 0, 0, 0.1);
+            --box-bg: rgba(255,255,255,0.98);
+            --scanline: rgba(0,0,0,0.07);
         }
-
         .dark-mode {
             --bg-color: #020205;
             --primary: #bc13fe;
             --text: #e0e0e0;
-            --box-bg: rgba(10, 10, 20, 0.95);
-            --scanline: rgba(188, 19, 254, 0.2);
+            --box-bg: rgba(10,10,20,0.95);
+            --scanline: rgba(188,19,254,0.15);
         }
-
         .red-room-mode {
             --bg-color: #4a0404;
             --primary: #ffffff;
             --text: #ffffff;
-            --box-bg: rgba(0, 0, 0, 0.85);
-            --scanline: rgba(255, 255, 255, 0.1);
+            --box-bg: rgba(0,0,0,0.85);
+            --scanline: rgba(255,255,255,0.07);
         }
 
         * { box-sizing: border-box; }
@@ -43,7 +41,6 @@
             transition: all 0.5s ease;
             overflow-x: hidden;
         }
-
         body::before {
             content: " "; display: block; position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -55,9 +52,9 @@
             width: 95%; max-width: 600px;
             position: relative; z-index: 150;
             display: flex; flex-direction: column; gap: 15px;
+            padding: 20px 0;
         }
 
-        /* Botão de Audio Centralizado */
         .audio-main-ctrl { text-align: center; margin-bottom: 5px; }
         .btn-audio {
             background: none; border: 1px solid var(--primary);
@@ -65,6 +62,7 @@
             font-family: 'Orbitron', sans-serif; font-size: 0.75rem;
             letter-spacing: 2px; cursor: pointer; transition: 0.3s;
         }
+        .btn-audio:hover { background: var(--primary); color: #000; }
 
         .header-ui {
             display: flex; justify-content: space-between; align-items: center;
@@ -75,63 +73,173 @@
             background: var(--box-bg);
             border: 2px solid var(--primary);
             padding: 35px; width: 100%;
-            box-shadow: 0 0 30px rgba(0,0,0,0.1);
+            box-shadow: 0 0 40px rgba(0,0,0,0.12);
             display: flex; flex-direction: column; gap: 20px;
         }
 
-        h1 { 
-            font-family: 'Orbitron', sans-serif; 
-            text-align: center; margin: 0; 
-            color: var(--primary); 
-            letter-spacing: 2px; /* Ajustado conforme pedido */
-            font-size: clamp(1.4rem, 5vw, 2.2rem); 
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center; margin: 0;
+            color: var(--primary); letter-spacing: 2px;
+            font-size: clamp(1.4rem, 5vw, 2.2rem);
         }
 
-        .luxe-list { font-style: italic; font-size: 1rem; line-height: 1.6; list-style: none; padding: 0; }
-        .luxe-list li { border-left: 2px solid var(--primary); padding-left: 10px; margin-bottom: 5px; }
+        .subtitle {
+            text-align: center; margin: 0;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 200; font-size: 0.8rem;
+            letter-spacing: 3px; opacity: 0.65;
+        }
+
+        /* Vagas restantes */
+        .vagas-badge {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            font-family: 'Orbitron', sans-serif; font-size: 0.7rem;
+            letter-spacing: 2px; color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 6px 12px; text-align: center;
+            animation: pulse-border 3s infinite;
+        }
+        .dot-live { width: 7px; height: 7px; border-radius: 50%; background: #e74c3c; animation: blink 1.2s infinite; }
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+        @keyframes pulse-border { 0%,100%{box-shadow:0 0 0px var(--primary)} 50%{box-shadow:0 0 8px var(--primary)} }
+
+        .luxe-list {
+            font-family: 'Montserrat', sans-serif; font-weight: 400;
+            font-size: 0.95rem; line-height: 1.9; list-style: none; padding: 0; margin: 0;
+        }
+        .luxe-list li {
+            border-left: 2px solid var(--primary);
+            padding-left: 12px; margin-bottom: 6px;
+            font-style: italic;
+        }
+
+        .divider {
+            border: none; border-top: 1px solid var(--primary);
+            opacity: 0.3; margin: 0;
+        }
+
+        .fine-print {
+            font-family: 'Montserrat', sans-serif; font-size: 0.65rem;
+            opacity: 0.45; text-align: center; line-height: 1.6;
+        }
 
         .btn-claim {
             width: 100%; padding: 20px;
             background: none; border: 2px solid var(--primary);
             color: var(--primary); font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem; letter-spacing: 2px;
             cursor: pointer; transition: 0.4s; text-transform: uppercase;
         }
         .btn-claim:hover { background: var(--primary); color: #000; }
 
-        /* MODAL DO BILHETE (ESTILO TREM) */
+        .footer-ui {
+            display: flex; justify-content: space-between; align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.62rem; opacity: 0.6;
+        }
+        .btn-ajuda {
+            background: none; border: none; color: var(--text);
+            font-family: 'Montserrat', sans-serif; font-size: 0.62rem;
+            cursor: pointer; opacity: 0.6; transition: opacity 0.2s;
+        }
+        .btn-ajuda:hover { opacity: 1; }
+
+        .reg-num {
+            text-align: center;
+            font-family: 'Montserrat', sans-serif; font-size: 0.58rem;
+            opacity: 0.3; letter-spacing: 1px; margin-top: -5px;
+        }
+
+        /* ── MODAL ── */
         #ticket-modal {
             display: none; position: fixed; top: 0; left: 0;
-            width: 100%; height: 100%; background: rgba(0,0,0,0.95);
+            width: 100%; height: 100%; background: rgba(0,0,0,0.96);
             z-index: 1000; align-items: center; justify-content: center;
             padding: 20px;
         }
 
+        /* ── BILHETE ── */
         .train-ticket {
-            background: #e8e4d9; 
-            color: #1a1a1a; width: 100%; max-width: 400px;
-            padding: 0; border: 2px solid #000;
+            background: #ece8db;
+            color: #1a1a1a; width: 100%; max-width: 420px;
+            border: 2px solid #000;
             font-family: 'VT323', monospace;
-            box-shadow: 0 0 50px rgba(212, 175, 55, 0.4);
-            position: relative;
+            box-shadow: 0 0 60px rgba(212,175,55,0.35);
+            position: relative; overflow: visible;
         }
 
-        .ticket-header { background: #000; color: #fff; padding: 10px; text-align: center; letter-spacing: 3px; }
-        .ticket-body { padding: 20px; border-bottom: 2px dashed #000; }
-        .ticket-stub { padding: 15px; text-align: center; background: #dcd7c9; font-size: 1.2rem; }
-        
-        /* Picotes Laterais */
-        .train-ticket::before, .train-ticket::after {
-            content: ''; position: absolute; left: -10px; top: 65%;
-            width: 20px; height: 20px; background: #000; border-radius: 50%;
+        .ticket-header {
+            background: #111; color: #d4af37;
+            padding: 14px 20px; text-align: center;
+            letter-spacing: 4px; font-size: 1.05rem;
+            line-height: 1.5;
         }
-        .train-ticket::after { left: auto; right: -10px; }
+        .ticket-header .sub {
+            font-size: 0.75rem; letter-spacing: 2px; opacity: 0.6; margin-top: 2px;
+        }
 
-        .footer-ui { display: flex; justify-content: space-between; font-size: 0.7rem; opacity: 0.8; }
+        .ticket-body { padding: 20px 24px; border-bottom: 2px dashed #888; font-size: 1.15rem; line-height: 1.9; }
+        .ticket-body .row { display: flex; justify-content: space-between; gap: 10px; }
+        .ticket-body .label { font-size: 0.8rem; opacity: 0.5; letter-spacing: 1px; }
+        .ticket-body .value { font-size: 1.25rem; }
+
+        .ticket-notice {
+            padding: 12px 24px;
+            background: #1a1a1a; color: #d4af37;
+            font-size: 0.95rem; line-height: 1.6; text-align: center;
+            border-bottom: 2px dashed #888;
+        }
+
+        .ticket-barcode {
+            padding: 10px 24px 4px;
+            display: flex; gap: 2px; align-items: flex-end; height: 48px;
+        }
+        .ticket-barcode span { display: inline-block; background: #111; width: 3px; }
+
+        .ticket-stub {
+            padding: 14px 24px;
+            display: flex; justify-content: space-between; align-items: center;
+            background: #dcd7c9; font-size: 1.05rem;
+        }
+        .stub-seal { font-size: 2rem; opacity: 0.15; font-family: serif; }
+
+        .notch { position: absolute; left: -12px; top: calc(78% - 12px); width: 24px; height: 24px; background: #111; border-radius: 50%; }
+        .notch.right { left: auto; right: -12px; }
+
+        .btn-print {
+            width: 100%; padding: 13px;
+            background: #111; color: #d4af37;
+            border: none; cursor: pointer;
+            font-family: 'VT323', monospace; font-size: 1.15rem; letter-spacing: 2px;
+            transition: background 0.2s;
+        }
+        .btn-print:hover { background: #222; }
+
+        /* ── IMPRESSÃO ── */
+        @media print {
+            body > *, body::before { display: none !important; }
+            #ticket-modal {
+                display: flex !important; position: static !important;
+                background: transparent !important; padding: 0 !important;
+                width: 100% !important; height: auto !important;
+            }
+            .train-ticket {
+                box-shadow: none !important; border: 2px solid #000 !important;
+                max-width: 100% !important; width: 100% !important;
+                page-break-inside: avoid;
+            }
+            .btn-print { display: none !important; }
+            .ticket-header, .ticket-stub, .ticket-notice, .ticket-barcode span, .notch {
+                -webkit-print-color-adjust: exact; print-color-adjust: exact;
+            }
+        }
     </style>
 </head>
 <body>
 
 <div class="wrapper">
+
     <div class="audio-main-ctrl">
         <button class="btn-audio" onclick="toggleAudio()" id="audioBtn">
             <i class="fas fa-play"></i> ATIVAR SOM AMBIENTE
@@ -139,49 +247,128 @@
     </div>
 
     <div class="header-ui">
-        <button onclick="cycleMode()" style="background:none; border:1px solid var(--primary); color:var(--primary); cursor:pointer; font-size: 0.65rem;" id="modeBtn">MODO_TERMINAL</button>
-        <div style="display:flex; align-items:center; gap:8px;">
-            <i class="fas fa-volume-low" style="font-size:0.7rem; color:var(--primary)"></i>
-            <input type="range" min="0" max="1" step="0.1" value="0.4" oninput="document.getElementById('bgMusic').volume = this.value" style="accent-color: var(--primary); width: 60px;">
+        <button onclick="cycleMode()" style="background:none;border:1px solid var(--primary);color:var(--primary);cursor:pointer;font-size:0.62rem;padding:4px 10px;font-family:'Orbitron',sans-serif;letter-spacing:1px;" id="modeBtn">NEO-KITSCH</button>
+        <div style="display:flex;align-items:center;gap:8px;">
+            <i class="fas fa-volume-low" style="font-size:0.7rem;color:var(--primary)"></i>
+            <input type="range" min="0" max="1" step="0.1" value="0.4"
+                oninput="document.getElementById('bgMusic').volume=this.value"
+                style="accent-color:var(--primary);width:60px;">
         </div>
     </div>
 
     <main class="terminal">
         <h1>TRANQUILITY CLAVIUS</h1>
-        <p style="text-align: center; font-weight: bold;">VOCÊ FOI SORTEADO!<br><span style="font-weight: normal; opacity: 0.7;">Arasaka Orbital Fleet © 2063</span></p>
-        
+        <p class="subtitle">NAVE CASSINO & RESORT ORBITAL · ARASAKA</p>
+
+        <!-- Badge de vagas -->
+        <div class="vagas-badge">
+            <span class="dot-live"></span>
+            <span id="vagas-txt">VAGAS RESTANTES: 7</span>
+        </div>
+
+        <p style="text-align:center;font-family:'Montserrat',sans-serif;font-weight:400;font-size:0.9rem;line-height:1.7;margin:0;">
+            Parabéns. Você foi <strong>pessoalmente selecionado</strong> pela Arasaka<br>
+            para uma experiência orbital sem precedentes.<br>
+            <span style="opacity:0.6;font-size:0.8rem;">Este convite é intransferível e de prazo limitado.</span>
+        </p>
+
+        <hr class="divider">
+
         <ul class="luxe-list">
-            <li>• OPORTUNIDADES DE EMPREGO E DIVERSÃO</li>
-            <li>• CHANCE DE FICAR RICO (CASSINO HIGH-ROLLER)</li>
-            <li>• UM NOVO COMEÇO (HARMONIZAÇÃO EXISTENCIAL)</li>
-            <li>• ESTADIA A NOSSA CONTA</li>
-            <li>• TODOS SÃO BEM-VINDOS À NAVE.</li>
+            <li>Acesso irrestrito ao Cassino High-Roller da Clavius</li>
+            <li>Oportunidades de emprego em ambiente de excelência</li>
+            <li>Programa de Bem-Estar e Renovação Pessoal — incluso</li>
+            <li>Acomodações de alto padrão integralmente custeadas</li>
+            <li>Uma nova perspectiva. Um novo horizonte. Você merece.</li>
         </ul>
 
-        <button class="btn-claim" onclick="gerarBilhete()">RECLAMAR MINHA CHANCE</button>
+        <hr class="divider">
+
+        <p class="fine-print">
+            Ao resgatar seu convite, você confirma ciência e concordância com os<br>
+            Termos de Experiência Arasaka (Rev. 2063.09) e com o Protocolo<br>
+            de Bem-Estar Integrado, incluindo o módulo de Harmonização Existencial.
+        </p>
+
+        <button class="btn-claim" onclick="gerarBilhete()">
+            ✦ &nbsp;RESGATAR MEU CONVITE&nbsp; ✦
+        </button>
     </main>
 
     <div class="footer-ui">
-        <span>ARASAKA_SYSTEMS_2063</span>
-        <span onclick="alert('ERROR: Ajuda indisponível. Por favor... não vá.')" style="cursor:help;"><i class="fas fa-question-circle"></i> AJUDA</span>
+        <span>ARASAKA CORP. © 2063</span>
+        <button class="btn-ajuda" onclick="mostrarAjuda()" id="btn-ajuda-el">
+            <i class="fas fa-question-circle"></i> SUPORTE
+        </button>
     </div>
+
+    <p class="reg-num">REG. ARASAKA-OFR-2063-441-C · ÓRBITA BAIXA TERRESTRE · LICENÇA CORPORATIVA CLASSE IV</p>
 </div>
 
+<!-- MODAL DO BILHETE -->
 <div id="ticket-modal" onclick="this.style.display='none'">
     <div class="train-ticket" onclick="event.stopPropagation()">
-        <div class="ticket-header">ARASAKA VOYAGE #2064</div>
+
+        <div class="ticket-header">
+            ✦ &nbsp;ARASAKA ORBITAL FLEET&nbsp; ✦
+            <div class="sub">NAVE CASSINO TRANQUILITY CLAVIUS</div>
+        </div>
+
         <div class="ticket-body">
-            <p style="font-size: 1.4rem; text-decoration: underline;">BILHETE DE EMBARQUE ÚNICO</p>
-            <p>ORIGEM: TERRA (SETOR 04)</p>
-            <p>DESTINO: NAVE CASSINO CLAVIUS</p>
-            <p>STATUS: CONSAGRADO</p>
-            <p>EXTRAÇÃO: MILITECH TACTICAL (48H)</p>
+            <div style="font-size:0.82rem;opacity:0.45;letter-spacing:2px;margin-bottom:10px;">CONVITE DE EMBARQUE — CONVIDADO ESPECIAL</div>
+
+            <div class="row">
+                <div>
+                    <div class="label">PASSAGEIRO</div>
+                    <div class="value" id="passenger-name">—</div>
+                </div>
+                <div style="text-align:right;">
+                    <div class="label">MODALIDADE</div>
+                    <div class="value">SORTEIO VIP</div>
+                </div>
+            </div>
+
+            <div class="row" style="margin-top:10px;">
+                <div>
+                    <div class="label">DESTINO</div>
+                    <div class="value">CLAVIUS ORBIT</div>
+                </div>
+                <div style="text-align:right;">
+                    <div class="label">STATUS</div>
+                    <div class="value">✔ CONFIRMADO</div>
+                </div>
+            </div>
+
+            <div style="margin-top:10px;">
+                <div class="label">Nº DO CONVITE</div>
+                <div class="value" id="ticket-number">ARS-2064-000000</div>
+            </div>
         </div>
+
+        <!-- Aviso 48h — a isca -->
+        <div class="ticket-notice">
+            Não há nada que precise fazer.<br>
+            <strong>Em até 48 horas, iremos até você.</strong><br>
+            <span style="font-size:0.82rem;opacity:0.65;">Bem-vindo à família Clavius.</span>
+        </div>
+
+        <div class="ticket-barcode" id="barcode-area"></div>
+
         <div class="ticket-stub">
-            VALIDO PARA: 01 SER <br>
-            <span style="font-size: 0.8rem;">NÃO REEMBOLSÁVEL</span>
+            <div>
+                <div style="font-size:0.78rem;opacity:0.45;letter-spacing:1px;">BENEFÍCIOS INCLUSOS</div>
+                <div style="font-size:1.2rem;">BEM-ESTAR INTEGRADO</div>
+                <div style="font-size:0.75rem;opacity:0.4;">INTRANSFERÍVEL · 01 CONVIDADO</div>
+            </div>
+            <div class="stub-seal">✦</div>
         </div>
-        <button onclick="window.print()" style="width:100%; padding:10px; background:#000; color:#fff; border:none; cursor:pointer; font-family:'VT323';">SALVAR DIGITALMENTE</button>
+
+        <div class="notch"></div>
+        <div class="notch right"></div>
+
+        <button class="btn-print" onclick="window.print()">
+            ⎙ &nbsp;IMPRIMIR / SALVAR CONVITE
+        </button>
     </div>
 </div>
 
@@ -189,35 +376,85 @@
 
 <script>
     const audio = document.getElementById('bgMusic');
-    let currentMode = 0;
+    let modeIdx = 0;
+    const modes = [
+        { cls: '',             label: 'NEO-KITSCH'  },
+        { cls: 'dark-mode',    label: 'CYBERTECH'   },
+        { cls: 'red-room-mode',label: 'RED ROOM'    },
+    ];
+
+    // ── Botão de Ajuda com alternância ──
+    let ajudaClicks = 0;
+    const ajudaMsgs = [
+        // Caloroso / atendimento ao cliente
+        "Olá! O Suporte Arasaka está aqui para ajudá-lo.\n\nDúvidas sobre seu convite? Nossa equipe de hospitalidade entrará em contato em breve.\n\nArasaka — Porque você merece o melhor.",
+        // Perturbador sutil
+        "Agradecemos seu contato.\n\nSeu perfil já foi registrado. Não é necessária nenhuma ação da sua parte.\n\nNão vá.",
+        // Volta ao caloroso
+        "Ficamos felizes que ainda esteja por aqui!\n\nSeu convite permanece ativo. A Clavius o aguarda com toda a hospitalidade que você merece.\n\nArasaka — O futuro é nosso presente a você.",
+        // Perturbador sutil novamente
+        "Este canal de suporte não está disponível no momento.\n\nNão vá.",
+    ];
+
+    function mostrarAjuda() {
+        alert(ajudaMsgs[ajudaClicks % ajudaMsgs.length]);
+        ajudaClicks++;
+    }
 
     function toggleAudio() {
         const btn = document.getElementById('audioBtn');
-        if (audio.paused) { 
-            audio.play().catch(e => console.log("Aguardando clique.")); 
-            btn.innerHTML = '<i class="fas fa-pause"></i> PAUSAR SOM'; 
-        }
-        else { 
-            audio.pause(); 
-            btn.innerHTML = '<i class="fas fa-play"></i> RETOMAR SOM'; 
+        if (audio.paused) {
+            audio.play().catch(() => {});
+            btn.innerHTML = '<i class="fas fa-pause"></i> PAUSAR SOM';
+        } else {
+            audio.pause();
+            btn.innerHTML = '<i class="fas fa-play"></i> RETOMAR SOM';
         }
     }
 
     function cycleMode() {
-        const body = document.body;
-        const btn = document.getElementById('modeBtn');
-        currentMode = (currentMode + 1) % 3;
-        body.classList.remove('dark-mode', 'red-room-mode');
-        
-        if (currentMode === 0) { btn.innerText = "MODO_TERMINAL"; }
-        else if (currentMode === 1) { body.classList.add('dark-mode'); btn.innerText = "MODO_RED_ROOM"; }
-        else { body.classList.add('red-room-mode'); btn.innerText = "MODO_NEO_KITSCH"; }
+        modeIdx = (modeIdx + 1) % modes.length;
+        document.body.classList.remove('dark-mode', 'red-room-mode');
+        if (modes[modeIdx].cls) document.body.classList.add(modes[modeIdx].cls);
+        document.getElementById('modeBtn').innerText = modes[modeIdx].label;
     }
 
+    // ── Vagas restantes (oscila entre 5 e 9, nunca zera) ──
+    let vagasAtual = 7;
+    function atualizarVagas() {
+        const delta = Math.random() < 0.5 ? -1 : 1;
+        vagasAtual = Math.max(5, Math.min(9, vagasAtual + delta));
+        document.getElementById('vagas-txt').textContent = `VAGAS RESTANTES: ${vagasAtual}`;
+    }
+    setInterval(atualizarVagas, 4800);
+
+    // ── Gerador de número de convite ──
+    function gerarNumero() {
+        return `ARS-2064-${Math.floor(Math.random() * 900000 + 100000)}`;
+    }
+
+    // ── Código de barras falso ──
+    function gerarBarcode() {
+        const area = document.getElementById('barcode-area');
+        area.innerHTML = '';
+        const ws = [2,3,1,4,2,1,3,2,1,2,4,1,3,2,1,2,3,1,4,2,1,3,1,2,3,1,2,4,1,2];
+        const hs = [30,38,25,42,28,35,40,22,38,30,42,25,35,38,28,40,22,35,30,38,42,25,35,28,40,30,38,22,35,42];
+        ws.forEach((w,i) => {
+            const b = document.createElement('span');
+            b.style.width = w + 'px';
+            b.style.height = hs[i] + 'px';
+            area.appendChild(b);
+        });
+    }
+
+    // ── Resgatar convite ──
     function gerarBilhete() {
-        if (audio.paused) audio.play();
+        if (audio.paused) audio.play().catch(() => {});
+        const nome = prompt('CONFIRMAÇÃO DE IDENTIDADE\n\nPor favor, informe seu nome completo:', '') || 'CONVIDADO';
+        document.getElementById('passenger-name').textContent = nome.toUpperCase();
+        document.getElementById('ticket-number').textContent = gerarNumero();
+        gerarBarcode();
         document.getElementById('ticket-modal').style.display = 'flex';
-        alert('ADMISSÃO CONFIRMADA.\nSeu bilhete foi gerado. A Arasaka agradece seu tempo.');
     }
 </script>
 </body>
