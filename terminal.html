@@ -482,31 +482,34 @@ function buildFlat(node, depth, result) {
 
 function renderTree() {
     flatItems = [];
+
+    // item ".." como primeiro elemento navegável se estamos em subpasta
+    if (stack.length > 0) {
+        flatItems.push({ node: { type: '__back__', label: '../' }, depth: 0 });
+    }
+
     buildFlat(currentFolder, 0, flatItems);
 
     const tree = document.getElementById('tree');
     tree.innerHTML = '';
-
-    // item ".." se estamos em subpasta
-    if (stack.length > 0) {
-        const back = document.createElement('div');
-        back.className = 'tree-item';
-        back.style.color = '#888';
-        back.innerHTML = `<span class="tree-icon">📁</span><span>../</span>`;
-        back.addEventListener('click', () => goBack());
-        tree.appendChild(back);
-    }
 
     flatItems.forEach((item, i) => {
         const el = document.createElement('div');
         el.className = 'tree-item' + (i === focusedIdx ? ' focused' : '');
         el.dataset.idx = i;
 
+        const isBack = item.node.type === '__back__';
         const indent = '&nbsp;'.repeat(item.depth * 4);
-        const icon = item.node.type === 'folder' ? '📂' : getFileIcon(item.node.label);
+        const icon   = isBack ? '📁' : item.node.type === 'folder' ? '📂' : getFileIcon(item.node.label);
+        const color  = isBack ? 'color:#888;' : '';
 
+        el.style.cssText = color;
         el.innerHTML = `<span class="tree-indent">${indent}</span><span class="tree-icon">${icon}</span><span>${item.node.label}</span>`;
-        el.addEventListener('click', () => { focusedIdx = i; renderTree(); openItem(item.node); });
+        el.addEventListener('click', () => {
+            focusedIdx = i;
+            renderTree();
+            if (isBack) goBack(); else openItem(item.node);
+        });
         tree.appendChild(el);
     });
 
@@ -615,7 +618,9 @@ document.addEventListener('keydown', e => {
         renderTree();
     } else if (e.key === 'z' || e.key === 'Z' || e.key === 'Enter') {
         e.preventDefault();
-        if (flatItems[focusedIdx]) openItem(flatItems[focusedIdx].node);
+        const item = flatItems[focusedIdx];
+        if (!item) return;
+        if (item.node.type === '__back__') goBack(); else openItem(item.node);
     } else if (e.key === 'Backspace') {
         e.preventDefault();
         goBack();
