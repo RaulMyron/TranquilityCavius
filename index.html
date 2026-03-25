@@ -225,21 +225,65 @@
 
         /* ── IMPRESSÃO ── */
         @media print {
-            body > *, body::before { display: none !important; }
+            /* Esconde tudo da página */
+            body { background: white !important; display: block !important; }
+            body::before { display: none !important; }
+            .wrapper { display: none !important; }
+
+            /* Mostra e posiciona o modal */
             #ticket-modal {
-                display: flex !important; position: static !important;
-                background: transparent !important; padding: 0 !important;
-                width: 100% !important; height: auto !important;
+                display: flex !important;
+                position: fixed !important;
+                top: 0 !important; left: 0 !important;
+                width: 100% !important; height: 100% !important;
+                background: white !important;
+                padding: 20px !important;
+                align-items: flex-start !important;
+                justify-content: center !important;
             }
+
             .train-ticket {
-                box-shadow: none !important; border: 2px solid #000 !important;
-                max-width: 100% !important; width: 100% !important;
+                box-shadow: none !important;
+                border: 2px solid #000 !important;
+                max-width: 500px !important;
+                width: 100% !important;
+                margin: 0 !important;
                 page-break-inside: avoid;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
+
+            /* Força cores em todos os elementos */
+            .ticket-header {
+                background: #111 !important;
+                color: #d4af37 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .ticket-notice {
+                background: #1a1a1a !important;
+                color: #d4af37 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .ticket-stub {
+                background: #dcd7c9 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .ticket-barcode span {
+                background: #111 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .notch {
+                background: white !important; /* no print o fundo é branco */
+                border: 2px solid #000 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
             .btn-print { display: none !important; }
-            .ticket-header, .ticket-stub, .ticket-notice, .ticket-barcode span, .notch {
-                -webkit-print-color-adjust: exact; print-color-adjust: exact;
-            }
         }
     </style>
 </head>
