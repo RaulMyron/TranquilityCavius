@@ -166,7 +166,8 @@
             border: 2px solid #000;
             font-family: 'VT323', monospace;
             box-shadow: 0 0 60px rgba(212,175,55,0.35);
-            position: relative; overflow: visible;
+            position: relative;
+            margin: 0 16px; /* espaço pros notches não cortarem */
         }
 
         .ticket-header {
@@ -204,8 +205,14 @@
         }
         .stub-seal { font-size: 2rem; opacity: 0.15; font-family: serif; }
 
-        .notch { position: absolute; left: -12px; top: calc(78% - 12px); width: 24px; height: 24px; background: #111; border-radius: 50%; }
-        .notch.right { left: auto; right: -12px; }
+        .notch {
+            position: absolute; left: -13px; top: calc(78% - 13px);
+            width: 26px; height: 26px;
+            background: rgba(0,0,0,0.96); /* combina com fundo do modal */
+            border-radius: 50%;
+            z-index: 10;
+        }
+        .notch.right { left: auto; right: -13px; }
 
         .btn-print {
             width: 100%; padding: 13px;
