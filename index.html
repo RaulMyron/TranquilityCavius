@@ -3,200 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TRANQUILITY CLAVIUS | Seu Novo Amanhã</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;700&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+    <title>TRANQUILITY_CLAVIUS_v8.4.1</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-dark: #020205; /* Fundo quase preto, absoluto */
-            --cyber-purple: #bc13fe;   /* Neon Purple */
-            --cyber-cyan: #00e5ff;     /* Neon Cyan detalhes */
-            --text-main: #f0f0f0;
-            --text-muted: #a0a0a0;
-            --accent-gold: #d4af37;    /* Ouro da luxúria */
-            --overlay-transition: rgba(188, 19, 254, 0.1);
+            --bg-color: #050509;
+            --primary: #bc13fe;   /* Roxo Neon */
+            --secondary: #00e5ff; /* Ciano Tech */
+            --text: #e0e0e0;
+            --accent: #d4af37;    /* Ouro Luxúria */
+            --alert: rgba(188, 19, 254, 0.2);
         }
 
-        * { box-sizing: border-box; }
+        /* Modo Alternativo (High-Contrast / Estéril) */
+        .light-mode {
+            --bg-color: #f0f0f5;
+            --primary: #5a008a;
+            --secondary: #008ba3;
+            --text: #1a1a1a;
+            --alert: rgba(0, 0, 0, 0.05);
+        }
+
+        * { box-sizing: border-box; cursor: crosshair; }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-dark);
-            font-family: 'Montserrat', sans-serif;
-            color: var(--text-main);
-            height: 100%;
-            overflow: hidden; /* Impede scroll na página inteira */
-            transition: background-color 2s ease;
+            margin: 0; padding: 0;
+            background-color: var(--bg-color);
+            font-family: 'VT323', monospace;
+            color: var(--text);
+            height: 100%; overflow: hidden;
+            transition: all 0.5s ease;
         }
 
-        /* Efeito de Scanline e Glitch Suave - Retrofuturismo */
+        /* Efeito de Scanline Estilo Fallout/Cyberpunk */
         body::before {
             content: " ";
-            display: block;
-            position: fixed;
+            display: block; position: fixed;
             top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.08) 50%), 
-                        linear-gradient(90deg, rgba(188, 19, 254, 0.02), rgba(0, 229, 255, 0.01), rgba(212, 175, 55, 0.01));
-            z-index: 10;
-            background-size: 100% 4px, 3px 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), 
+                        linear-gradient(90deg, rgba(188, 19, 254, 0.02), rgba(0, 229, 255, 0.02));
+            z-index: 10; background-size: 100% 4px, 3px 100%;
             pointer-events: none;
-            opacity: 0.5;
         }
 
-        .main-wrapper {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100dvh; /* Dynamic viewport height for mobile */
-            padding: 30px;
-            position: relative;
-            z-index: 5;
+        .wrapper {
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            height: 100dvh; padding: 20px; position: relative; z-index: 5;
         }
 
-        header {
-            width: 100%;
-            max-width: 650px;
-            text-align: center;
-            margin-bottom: 40px;
+        .terminal {
+            width: 100%; max-width: 600px;
+            background: rgba(10, 10, 20, 0.8);
+            border: 1px solid var(--primary);
+            padding: 25px;
+            box-shadow: 0 0 20px var(--alert);
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
         }
+
+        .header-ui {
+            display: flex; justify-content: space-between;
+            border-bottom: 1px solid var(--primary);
+            margin-bottom: 20px; padding-bottom: 5px;
+        }
+
+        .mode-toggle {
+            background: none; border: 1px solid var(--secondary);
+            color: var(--secondary); font-family: 'VT323';
+            font-size: 0.8rem; padding: 2px 8px; transition: 0.3s;
+        }
+
+        .mode-toggle:hover { background: var(--secondary); color: var(--bg-color); }
 
         h1 {
             font-family: 'Orbitron', sans-serif;
-            letter-spacing: 6px;
-            font-size: 1.8rem;
-            margin: 0;
-            color: var(--text-main);
-            text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            font-size: 1.4rem; color: var(--primary);
+            text-shadow: 0 0 8px var(--primary); margin: 0;
         }
 
-        @media (max-width: 480px) { h1 { font-size: 1.4rem; letter-spacing: 3px; } }
+        .hero { font-size: 1.2rem; line-height: 1.4; margin: 20px 0; }
 
-        .status-bar {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: var(--cyber-purple);
-            margin-top: 10px;
-            opacity: 0.8;
+        .luxe-list {
+            color: var(--secondary); border-left: 2px solid var(--accent);
+            padding-left: 15px; margin: 20px 0; font-size: 1.1rem;
         }
 
-        .invitation-container {
-            width: 100%;
-            max-width: 650px;
-            background: rgba(10, 10, 20, 0.7);
-            border: 1px solid rgba(188, 19, 254, 0.3);
-            padding: 40px;
-            box-shadow: 0 0 40px rgba(188, 19, 254, 0.15);
-            position: relative;
-            backdrop-filter: blur(10px);
-            /* Recorte angular Cybertech mais sutil */
-            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 0 100%);
+        .btn-claim {
+            width: 100%; padding: 15px;
+            background: none; border: 2px solid var(--primary);
+            color: var(--primary); font-family: 'Orbitron';
+            font-size: 1rem; letter-spacing: 2px;
+            transition: 0.3s; margin-top: 20px;
         }
 
-        @media (max-width: 480px) { .invitation-container { padding: 25px; } }
-
-        .hero-text {
-            font-size: 1.3rem;
-            line-height: 1.5;
-            margin-bottom: 30px;
-            font-weight: 200;
-            letter-spacing: 1px;
+        .btn-claim:hover {
+            background: var(--primary); color: #fff;
+            box-shadow: 0 0 25px var(--primary);
         }
 
-        @media (max-width: 480px) { .hero-text { font-size: 1.1rem; } }
+        footer { font-size: 0.8rem; margin-top: 30px; opacity: 0.6; width: 100%; max-width: 600px; }
 
-        .luxe-details {
-            font-size: 1rem;
-            color: var(--text-muted);
-            border-left: 2px solid var(--accent-gold);
-            padding-left: 20px;
-            margin: 30px 0;
-            line-height: 1.7;
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 20px var(--alert); }
+            50% { box-shadow: 0 0 40px rgba(255, 0, 0, 0.4); border-color: red; }
+            100% { box-shadow: 0 0 20px var(--alert); }
         }
 
-        .highlight-gold {
-            color: var(--accent-gold);
-            font-weight: 700;
-            text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
-        }
-
-        .button {
-            display: inline-block;
-            width: 100%;
-            margin-top: 35px;
-            padding: 18px;
-            background: none;
-            border: 2px solid var(--cyber-purple);
-            color: var(--cyber-purple);
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            transition: all 0.4s ease;
-            cursor: pointer;
-            text-shadow: 0 0 8px var(--cyber-purple);
-            box-shadow: 0 0 15px rgba(188, 19, 254, 0.2);
-        }
-
-        .button:hover {
-            background-color: var(--cyber-purple);
-            color: var(--bg-dark);
-            box-shadow: 0 0 25px rgba(188, 19, 254, 0.6);
-            text-shadow: none;
-            letter-spacing: 6px;
-        }
-
-        footer {
-            width: 100%;
-            max-width: 650px;
-            margin-top: 50px;
-            font-size: 0.75rem;
-            opacity: 0.4;
-            letter-spacing: 1.5px;
-            line-height: 1.4;
-            text-align: center;
-        }
-
-        /* Classes de animação via JS */
-        .system-accepted {
-            background-color: var(--overlay-transition) !important;
-        }
+        .active-extraction { animation: pulse-red 2s infinite; }
     </style>
 </head>
 <body>
 
-<div class="main-wrapper">
-    <header>
+<div class="wrapper">
+    <header style="width: 100%; max-width: 600px; margin-bottom: 10px;">
+        <div class="header-ui">
+            <span>TERMINAL AURA v8.4.1</span>
+            <button class="mode-toggle" onclick="toggleMode()">TOGGLE_UI_MODE</button>
+        </div>
         <h1>TRANQUILITY CLAVIUS</h1>
-        <div class="status-bar">SEU NOVO AMANHÃ | EXCLUSIVIDADE | PRAZER</div>
     </header>
 
-    <main class="invitation-container" id="terminal">
-        <p class="hero-text">
-            Uma nova chance. Um novo amanhecer.<br>
-            Deixe o ruído do passado para trás e abrace a <span class="highlight-gold">verdadeira abundância</span>.
-        </p>
-
-        <div class="luxe-details">
-            > Suítes que antecipam seus desejos.<br>
-            > Acesso a experiências de luxúria e êxtase nunca antes imaginadas.<br>
-            > Segurança absoluta. Paz perpétua.<br>
-            > Você não foi apenas selecionado. Você foi <span class="highlight-gold">consagrado</span>.
+    <main class="terminal" id="mainTerminal">
+        <p class="hero">> Uma nova chance detectada.<br>> O ruído da Terra é opcional.<br>> <span style="color: var(--accent)">A abundância te aguarda em Clavius.</span></p>
+        
+        <div class="luxe-list">
+            - Suítes com sincronização de dopamina.<br>
+            - O fim definitivo de toda ansiedade social.<br>
+            - Experiências de luxúria sem limites biológicos.
         </div>
 
-        <p style="text-align: center; font-style: italic; color: var(--text-muted); font-size: 0.9rem;">
-            Seu perfil biopsicossocial foi aceito para o programa de Harmonização do Prazer.
-        </p>
+        <p style="opacity: 0.8; font-size: 0.9rem;">[AVISO: Seu perfil biopsicossocial foi CONSAGRADO para o programa de Harmonização do Prazer.]</p>
 
-        <button class="button" onclick="iniciarExperiencia()">RECLAMAR MINHA CHANCE</button>
+        <button class="btn-claim" onclick="initAdmission()">RECLAMAR MINHA CHANCE</button>
     </main>
 
     <footer>
-        AVISO: O ACEITE É FINAL E VINCULANTE.<br>
-        A LOCALIZAÇÃO DO SEU DISPOSITIVO FOI REGISTRADA PARA EXTRAÇÃO PRIORITÁRIA.
+        LOG_INFO: Localização registrada. Protocolo de extração urbana ativado.<br>
+        © ARASAKA CORP - ÓRBITA LUNAR CLAVIUS.
     </footer>
 </div>
 
-<audio id="jazzAudio" loop preload="auto">
-    <source src="
+<audio id="bgMusic" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    function toggleMode() {
+        document.body.classList.toggle('light-mode');
+    }
+
+    function initAdmission() {
+        const audio = document.getElementById('bgMusic');
+        const terminal = document.getElementById('mainTerminal');
+        
+        audio.volume = 0;
+        audio.play();
+        let vol = 0;
+        let fade = setInterval(() => {
+            if (vol < 0.3) { vol += 0.02; audio.volume = vol; }
+            else { clearInterval(fade); }
+        }, 150);
+
+        terminal.classList.add('active-extraction');
+
+        setTimeout(() => {
+            alert('ADMISSÃO CONFIRMADA.\n\nPrepare-se para o transporte. Uma equipe especializada da Militech irá buscá-lo em sua localização atual em até 2 dias úteis.\n\nNão tente se mudar ou alterar seus implantes até a extração. A Arasaka agradece sua escolha.');
+        }, 1000);
+    }
+</script>
+</body>
+</html>
