@@ -3,47 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TRANQUILITY_CLAVIUS_v8.4.1</title>
-    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron:wght@500;700&family=Cinzel:wght@400;700&family=Montserrat:wght@100;400;700&display=swap" rel="stylesheet">
+    <title>TRANQUILITY_CLAVIUS_2063</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron:wght@500;700&family=Cinzel:wght@400;700&family=Montserrat:wght@200;400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            /* MODO INICIAL: NEO-KITSCH (Isca) */
+            /* MODO 0: NEO-KITSCH */
             --bg-color: #fdfdfd;
-            --primary: #d4af37;   /* Ouro Sedutor */
-            --secondary: #222;
+            --primary: #d4af37;
             --text: #1a1a1a;
             --box-bg: rgba(255, 255, 255, 0.96);
             --scanline: rgba(0, 0, 0, 0.05);
             --font-main: 'Cinzel', serif;
-            --font-title: 'Cinzel', serif;
-            --accent-glow: 0 0 10px rgba(212, 175, 55, 0.3);
         }
 
-        /* MODO TERMINAL (Cybertech 2063) */
+        /* MODO 1: TERMINAL (ROXO) */
         .dark-mode {
-            --bg-color: #020205; /* Preto Absoluto */
-            --primary: #bc13fe;   /* Roxo Neon */
-            --secondary: #00e5ff; /* Ciano Tech */
+            --bg-color: #020205;
+            --primary: #bc13fe;
             --text: #e0e0e0;
             --box-bg: rgba(5, 5, 10, 0.95);
             --scanline: rgba(188, 19, 254, 0.15);
             --font-main: 'VT323', monospace;
-            --font-title: 'Orbitron', sans-serif;
-            --accent-glow: 0 0 15px rgba(188, 19, 254, 0.4);
         }
 
-        /* MODO RED ROOM (Bioshock/Twin Peaks Minimalist Aesthetic) */
+        /* MODO 2: RED ROOM (MINIMALISTA) */
         .red-room-mode {
-            --bg-color: #3e0303; /* Vermelho Sangue Escuro */
-            --primary: #000000;   /* Preto Total */
-            --secondary: #ffffff; /* Branco Puro */
-            --text: #0a0a0a;
-            --box-bg: rgba(0, 0, 0, 0.85); /* Caixa preta */
-            --scanline: rgba(255, 255, 255, 0.02);
-            --font-main: 'Montserrat', sans-serif; /* Minimalismo puro */
-            --font-title: 'Montserrat', sans-serif;
-            --accent-glow: 0 0 5px rgba(0, 0, 0, 0.5);
+            --bg-color: #4a0404; /* Vermelho Profundo */
+            --primary: #ffffff;   /* Fonte Branca para Legibilidade */
+            --text: #ffffff;
+            --box-bg: rgba(0, 0, 0, 0.8);
+            --scanline: rgba(255, 255, 255, 0.05);
+            --font-main: 'Montserrat', sans-serif;
         }
 
         * { box-sizing: border-box; }
@@ -54,12 +45,11 @@
             background-color: var(--bg-color);
             color: var(--text);
             font-family: var(--font-main);
-            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.5s ease;
             display: flex; align-items: center; justify-content: center;
             overflow-x: hidden;
         }
 
-        /* Scanlines adaptáveis */
         body::before {
             content: " "; display: block; position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -69,20 +59,17 @@
 
         .wrapper {
             width: 95%; max-width: 600px;
-            position: relative; z-index: 50;
+            position: relative; z-index: 150;
             display: flex; flex-direction: column; gap: 15px;
-            padding: 30px 0;
         }
 
-        /* Botão Play/Pause Central */
-        .audio-ctrl { text-align: center; margin-bottom: 5px; }
+        .audio-ctrl { text-align: center; }
         .btn-play {
             background: none; border: 1px solid var(--primary);
-            color: var(--primary); padding: 10px 25px;
+            color: var(--primary); padding: 8px 20px;
             font-family: 'Orbitron', sans-serif; cursor: pointer;
-            font-size: 0.75rem; letter-spacing: 3px; transition: 0.3s;
+            font-size: 0.7rem; letter-spacing: 2px;
         }
-        .btn-play:hover { background: var(--primary); color: var(--bg-color); }
 
         .header-ui {
             display: flex; justify-content: space-between; align-items: center;
@@ -91,131 +78,86 @@
 
         .terminal {
             background: var(--box-bg);
-            border: 2px solid var(--primary);
-            padding: 40px; width: 100%;
-            box-shadow: var(--accent-glow);
+            border: 1px solid var(--primary);
+            padding: 35px; width: 100%;
+            box-shadow: 0 0 30px rgba(0,0,0,0.1);
             display: flex; flex-direction: column; gap: 20px;
-            position: relative;
-            transition: all 0.3s ease;
         }
 
-        /* Glitch Subliminar no Título */
-        @keyframes subliminal {
-            0%, 94%, 100% { opacity: 1; filter: none; }
-            95% { opacity: 0.5; filter: invert(1) sepia(1) hue-rotate(-50deg); }
-        }
-        h1 { 
-            font-family: var(--font-title); text-align: center; margin: 0; 
-            color: var(--primary); letter-spacing: 5px; 
-            animation: subliminal 12s infinite; font-size: 1.8rem;
-        }
+        h1 { font-family: 'Orbitron', sans-serif; text-align: center; margin: 0; color: var(--primary); letter-spacing: 5px; }
 
-        .red-room-mode h1 { font-weight: 100; color: #000; text-shadow: none; letter-spacing: 8px; font-size: 1.6rem; }
-
-        .promo-text { text-align: center; font-size: 1.2rem; font-weight: 200; border-bottom: 1px dotted var(--primary); padding-bottom: 15px; }
-        .red-room-mode .promo-text { color: #fff; border-bottom: none; font-style: italic; font-weight: 400; }
-
-        .luxe-list { font-style: italic; font-size: 1rem; line-height: 1.6; color: var(--text); }
-        .red-room-mode .luxe-list { color: #fff; font-style: normal; font-weight: 100; font-size: 0.9rem; }
+        .luxe-list { font-style: italic; font-size: 0.95rem; line-height: 1.6; }
 
         .btn-claim {
             width: 100%; padding: 18px;
             background: none; border: 2px solid var(--primary);
             color: var(--primary); font-family: 'Orbitron', sans-serif;
-            cursor: pointer; transition: 0.4s; font-size: 0.9rem;
-            text-transform: uppercase;
+            cursor: pointer; transition: 0.4s;
         }
-        .btn-claim:hover { background: var(--primary); color: var(--bg-color); box-shadow: var(--accent-glow); }
-        .red-room-mode .btn-claim { border: 1px solid #000; color: #fff; font-family: 'Montserrat'; font-weight: 100; }
-        .red-room-mode .btn-claim:hover { background: #000; color: #fff; }
+        .btn-claim:hover { background: var(--primary); color: #000; }
 
-        /* Overlay de Escaneamento */
-        #scanner {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 1000; color: #bc13fe;
-            align-items: center; justify-content: center; font-family: 'VT323'; text-align: center;
-        }
-        .red-room-mode #scanner { color: red; }
-
-        .footer-ui { display: flex; justify-content: space-between; font-size: 0.7rem; opacity: 0.8; padding-top: 10px; }
-        .red-room-mode .footer-ui { color: #fff; opacity: 0.5; font-weight: 100; }
+        .footer-ui { display: flex; justify-content: space-between; font-size: 0.7rem; opacity: 0.8; }
         
-        #yt-player { position: absolute; top: -999px; }
-
-        input[type=range] { accent-color: var(--primary); width: 60px; vertical-align: middle; }
+        #yt-player { position: absolute; top: -9999px; left: -9999px; }
     </style>
 </head>
 <body>
 
-<div id="scanner">
-    <div>
-        <h2 id="scan-text">INICIANDO ESCANEAMENTO DE RETINA...</h2>
-        <p id="scan-percent">0%</p>
-    </div>
-</div>
-
 <div class="wrapper">
     <div class="audio-ctrl">
         <button class="btn-play" onclick="toggleAudio()">
-            <i id="play-icon" class="fas fa-play"></i> ATIVAR SOM AMBIENTE
+            <i id="play-icon" class="fas fa-play"></i> PLAY / PAUSE JAZZ
         </button>
     </div>
 
     <div class="header-ui">
-        <button onclick="cycleMode()" style="background:none; border:1px solid var(--primary); color:var(--primary); cursor:pointer; font-family:inherit; font-size: 0.7rem;" id="modeBtn">VISUALIZAR_TERMINAL</button>
-        <div style="font-size: 0.7rem;">
-            VOL: <input type="range" min="0" max="1" step="0.1" value="0.4" oninput="updateVol(this.value)">
+        <button onclick="cycleMode()" style="background:none; border:1px solid var(--primary); color:var(--primary); cursor:pointer; font-size: 0.7rem;" id="modeBtn">ALTERNAR VISUAL</button>
+        <div style="font-size: 0.7rem; color: var(--primary);">
+            VOL: <input type="range" min="0" max="1" step="0.1" value="0.4" oninput="updateVol(this.value)" style="accent-color: var(--primary); vertical-align: middle; width: 60px;">
         </div>
     </div>
 
     <main class="terminal">
-        <h1 id="title">TRANQUILITY CLAVIUS</h1>
-        <div class="promo-text">VOCÊ FOI SORTEADO!</div>
-        
-        <p style="text-align: center; margin: 0; font-size: 0.9rem;">
-            A Arasaka apresenta o ápice do luxo orbital em 2063.<br>
-            A fase de escassez terminou. A fase de <span style="color:var(--primary)">consagração</span> começa agora.
-        </p>
+        <h1>TRANQUILITY CLAVIUS</h1>
+        <p style="text-align: center; margin: 0; font-size: 1.1rem;">VOCÊ FOI SORTEADO!<br>
+        <span style="font-size: 0.8rem; opacity: 0.7;">Arasaka Corp © 2063</span></p>
 
         <div class="luxe-list">
-            • Suítes com Harmonização Dopaminérgica.<br>
-            • Fim definitivo de toda ansiedade social.<br>
-            • Luxúria e Êxtase sem limites biológicos.
+            • OPORTUNIDADE DE EMPREGO<br>
+            • CHANCE DE FICAR RICO<br>
+            • UM NOVO COMEÇO...<br>
+            • TODOS SÃO BEM-VINDOS.
         </div>
 
-        <button class="btn-claim" onclick="initAdmission()">RECLAMAR MINHA CHANCE</button>
+        <button class="btn-claim" onclick="alert('ADMISSÃO CONFIRMADA.\nEquipe Militech em rota. Chegada em 2 dias úteis.')">RECLAMAR MINHA CHANCE</button>
     </main>
 
     <div class="footer-ui">
-        <span><i class="fas fa-microchip"></i> ARASAKA_SYSTEMS © 2063</span>
-        <span onclick="alert('ERROR: Ajuda indisponível. Eles estão ouvindo...')" style="cursor:help;"><i class="fas fa-question-circle"></i> AJUDA</span>
+        <span><i class="fas fa-microchip"></i> ARASAKA_SYSTEMS_2063</span>
+        <span onclick="alert('ERROR: Ajuda indisponível.')" style="cursor:help;"><i class="fas fa-question-circle"></i> AJUDA</span>
     </div>
 </div>
 
 <div id="yt-player">
     <iframe id="video" width="560" height="315" 
-    src="https://www.youtube.com/embed/ID_DO_VIDEO?enablejsapi=1&loop=1&playlist=ID_DO_VIDEO" 
+    src="https://www.youtube.com/embed/TmIwm5RElRs?enablejsapi=1&loop=1&playlist=TmIwm5RElRs" 
     frameborder="0"></iframe>
 </div>
 
 <script>
     let playing = false;
-    let currentMode = 0; // 0: NeoKitsch, 1: Terminal, 2: RedRoom
+    let currentMode = 0; 
     const video = document.getElementById('video');
 
     function toggleAudio() {
         const icon = document.getElementById('play-icon');
-        const btnText = document.querySelector('.btn-play');
         if (!playing) {
             video.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
             icon.className = "fas fa-pause";
-            btnText.innerHTML = '<i class="fas fa-pause"></i> PAUSAR ÁUDIO';
             playing = true;
-            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(e=>{});
         } else {
             video.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
             icon.className = "fas fa-play";
-            btnText.innerHTML = '<i class="fas fa-play"></i> RETOMAR ÁUDIO';
             playing = false;
         }
     }
@@ -226,52 +168,11 @@
 
     function cycleMode() {
         const body = document.body;
-        const btn = document.getElementById('modeBtn');
-        
         currentMode = (currentMode + 1) % 3;
-        
-        // Reseta as classes
         body.classList.remove('dark-mode', 'red-room-mode');
         
-        if (currentMode === 0) {
-            btn.innerText = "VISUALIZAR_TERMINAL";
-        } else if (currentMode === 1) {
-            body.classList.add('dark-mode');
-            btn.innerText = "VISUALIZAR_AMNÉSIA";
-        } else if (currentMode === 2) {
-            body.classList.add('red-room-mode');
-            btn.innerText = "VISUALIZAR_NEO_KITSCH";
-            // No modo Red Room, a música sobe automaticamente e o volume também
-            if (!playing) toggleAudio();
-            updateVol(0.6); // Volume sobe para o susto
-            // Alerta minimalista
-            setTimeout(() => {
-                alert('Dr. Aris Thorne te aguarda em seu Ateliê.');
-            }, 600);
-        }
-    }
-
-    function initAdmission() {
-        if (!playing) toggleAudio(); // Toca som ao clicar
-        const scanner = document.getElementById('scanner');
-        const sText = document.getElementById('scan-text');
-        const sPercent = document.getElementById('scan-percent');
-        scanner.style.display = 'flex';
-        
-        let p = 0;
-        let itv = setInterval(() => {
-            p += Math.floor(Math.random() * 15) + 1;
-            if (p >= 100) {
-                p = 100;
-                clearInterval(itv);
-                sText.innerText = "PADRÃO NEURAL SINCRONIZADO. BEM-VINDO A CLAVIUS.";
-                setTimeout(() => {
-                    alert('ADMISSÃO CONFIRMADA.\nMilitech em rota.\n\n"Não se preocupe com o passado. Nós cuidaremos dele para você."');
-                    scanner.style.display = 'none';
-                }, 1500);
-            }
-            sPercent.innerText = p + "%";
-        }, 150);
+        if (currentMode === 1) body.classList.add('dark-mode');
+        else if (currentMode === 2) body.classList.add('red-room-mode');
     }
 </script>
 </body>
