@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARASAKA DATABANK // CLAVIUS</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&family=Orbitron:wght@500;700&family=Cinzel:wght@400;700&family=Montserrat:wght@200;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fdfdfd;
+            --primary: #d4af37;
+            --text: #1a1a1a;
+            --box: rgba(255,255,255,0.98);
+            --scanline: rgba(0,0,0,0.06);
+            --muted: #555;
+            --tag-bg: rgba(212,175,55,0.12);
+        }
+        .dark-mode {
+            --bg: #020205;
+            --primary: #bc13fe;
+            --text: #e0e0e0;
+            --box: rgba(10,10,20,0.97);
+            --scanline: rgba(188,19,254,0.12);
+            --muted: #999;
+            --tag-bg: rgba(188,19,254,0.15);
+        }
+        .red-room-mode {
+            --bg: #4a0404;
+            --primary: #ffffff;
+            --text: #ffffff;
+            --box: rgba(0,0,0,0.88);
+            --scanline: rgba(255,255,255,0.06);
+            --muted: #ccc;
+            --tag-bg: rgba(255,255,255,0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            min-height: 100vh;
+            transition: all 0.4s ease;
+        }
+        body::before {
+            content: " "; display: block; position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(var(--scanline) 50%, transparent 50%);
+            z-index: 0; background-size: 100% 5px; pointer-events: none;
+        }
+
+        /* ── TOPBAR ── */
+        .topbar {
+            position: sticky; top: 0; z-index: 100;
+            background: var(--bg);
+            border-bottom: 1px solid var(--primary);
+            padding: 12px 24px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px; flex-wrap: wrap;
+        }
+        .topbar-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem; letter-spacing: 3px;
+            color: var(--primary);
+        }
+        .topbar-brand span { opacity: 0.45; font-size: 0.65rem; display: block; letter-spacing: 2px; }
+        .topbar-controls { display: flex; gap: 10px; align-items: center; }
+        .btn-top {
+            background: none; border: 1px solid var(--primary);
+            color: var(--primary); padding: 5px 12px;
+            font-family: 'Orbitron', sans-serif; font-size: 0.6rem;
+            letter-spacing: 1px; cursor: pointer; transition: 0.2s;
+            text-decoration: none;
+        }
+        .btn-top:hover { background: var(--primary); color: #000; }
+
+        /* ── LAYOUT ── */
+        .layout {
+            position: relative; z-index: 1;
+            display: flex; max-width: 1100px;
+            margin: 0 auto; padding: 30px 20px;
+            gap: 28px; align-items: flex-start;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 220px; flex-shrink: 0;
+            position: sticky; top: 72px;
+        }
+        .sidebar-title {
+            font-family: 'Orbitron', sans-serif; font-size: 0.6rem;
+            letter-spacing: 2px; color: var(--primary);
+            border-bottom: 1px solid var(--primary);
+            padding-bottom: 6px; margin-bottom: 12px;
+        }
+        .sidebar nav { display: flex; flex-direction: column; gap: 4px; }
+        .nav-section {
+            font-size: 0.65rem; letter-spacing: 2px;
+            color: var(--primary); opacity: 0.5;
+            margin-top: 10px; margin-bottom: 2px;
+            text-transform: uppercase;
+        }
+        .nav-link {
+            font-size: 0.78rem; color: var(--text);
+            text-decoration: none; padding: 4px 8px;
+            border-left: 2px solid transparent;
+            transition: 0.2s; cursor: pointer;
+        }
+        .nav-link:hover, .nav-link.active {
+            border-left-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* ── CONTEÚDO ── */
+        .content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 40px; }
+
+        /* ── SEÇÃO ── */
+        .section { scroll-margin-top: 80px; }
+        .section-header {
+            display: flex; align-items: center; gap: 12px;
+            border-bottom: 1px solid var(--primary);
+            padding-bottom: 10px; margin-bottom: 24px;
+        }
+        .section-id {
+            font-family: 'VT323', monospace; font-size: 1rem;
+            color: var(--primary); opacity: 0.5; letter-spacing: 1px;
+        }
+        .section-title {
+            font-family: 'Orbitron', sans-serif; font-size: 1rem;
+            color: var(--primary); letter-spacing: 2px;
+        }
+
+        /* ── CARD DE VERBETE ── */
+        .entry {
+            background: var(--box);
+            border: 1px solid var(--primary);
+            border-left: 3px solid var(--primary);
+            padding: 20px 24px;
+            margin-bottom: 16px;
+        }
+        .entry-head {
+            display: flex; align-items: baseline;
+            gap: 12px; margin-bottom: 10px; flex-wrap: wrap;
+        }
+        .entry-term {
+            font-family: 'Orbitron', sans-serif; font-size: 0.9rem;
+            color: var(--primary); letter-spacing: 1px;
+        }
+        .entry-type {
+            font-size: 0.65rem; letter-spacing: 2px;
+            color: var(--muted); font-style: italic;
+        }
+        .entry-tag {
+            font-size: 0.6rem; letter-spacing: 1px;
+            background: var(--tag-bg); color: var(--primary);
+            padding: 2px 8px; border: 1px solid var(--primary);
+            opacity: 0.8;
+        }
+        .entry p {
+            font-size: 0.82rem; line-height: 1.8;
+            color: var(--text); margin-bottom: 8px;
+        }
+        .entry p:last-child { margin-bottom: 0; }
+
+        /* Nota de GM */
+        .gm-note {
+            display: none; /* wiki in-universe não mostra GM notes */
+        }
+
+        /* Classificação */
+        .classification {
+            font-family: 'VT323', monospace; font-size: 0.85rem;
+            letter-spacing: 2px; color: var(--muted);
+            margin-top: 8px; padding-top: 8px;
+            border-top: 1px dashed var(--primary);
+            opacity: 0.5;
+        }
+
+        /* ── TIMELINE ── */
+        .timeline { display: flex; flex-direction: column; gap: 0; }
+        .tl-item { display: flex; gap: 16px; padding-bottom: 20px; position: relative; }
+        .tl-item::before {
+            content: ''; position: absolute;
+            left: 47px; top: 24px; bottom: 0; width: 1px;
+            background: var(--primary); opacity: 0.2;
+        }
+        .tl-item:last-child::before { display: none; }
+        .tl-year {
+            font-family: 'VT323', monospace; font-size: 1.1rem;
+            color: var(--primary); min-width: 55px; text-align: right;
+            padding-top: 2px;
+        }
+        .tl-dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: var(--primary); flex-shrink: 0;
+            margin-top: 7px;
+        }
+        .tl-body { flex: 1; }
+        .tl-event {
+            font-family: 'Montserrat', sans-serif; font-weight: 700;
+            font-size: 0.8rem; letter-spacing: 1px; margin-bottom: 4px;
+        }
+        .tl-desc {
+            font-size: 0.78rem; line-height: 1.7; color: var(--text); opacity: 0.8;
+        }
+
+        /* ── RODAPÉ ── */
+        footer {
+            position: relative; z-index: 1;
+            border-top: 1px solid var(--primary);
+            text-align: center; padding: 20px;
+            font-size: 0.6rem; letter-spacing: 2px; opacity: 0.35;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* ── RESPONSIVO ── */
+        @media (max-width: 700px) {
+            .sidebar { display: none; }
+            .layout { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="topbar-brand">
+        ARASAKA DATABANK
+        <span>CLAVIUS ORIENTATION SYSTEM v2.4 // ACESSO: CONVIDADO</span>
+    </div>
+    <div class="topbar-controls">
+        <a href="index.html" class="btn-top">← VOLTAR</a>
+        <button class="btn-top" onclick="cycleMode()" id="modeBtn">NEO-KITSCH</button>
+    </div>
+</div>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-title">ÍNDICE</div>
+        <nav>
+            <div class="nav-section">01</div>
+            <a class="nav-link" onclick="scrollTo('sec-historia')">Contexto Histórico</a>
+
+            <div class="nav-section">02</div>
+            <a class="nav-link" onclick="scrollTo('sec-corps')">Corporações</a>
+
+            <div class="nav-section">03</div>
+            <a class="nav-link" onclick="scrollTo('sec-girias')">Gírias e Vocabulário</a>
+
+            <div class="nav-section">04</div>
+            <a class="nav-link" onclick="scrollTo('sec-clavius')">Nave Clavius e AURA</a>
+        </nav>
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <main class="content">
+
+        <!-- ═══ 01 HISTÓRIA ═══ -->
+        <section class="section" id="sec-historia">
+            <div class="section-header">
+                <span class="section-id">FILE_01</span>
+                <span class="section-title">CONTEXTO HISTÓRICO</span>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <span class="entry-term">O MUNDO EM 2063</span>
+                    <span class="entry-type">visão geral</span>
+                </div>
+                <p>O mundo de 2063 é o produto de décadas de colapso gerenciado. Governos nacionais existem no papel; na prática, são as corporações que definem leis, fronteiras e o valor de uma vida humana. Cidades como Night City sobrevivem num equilíbrio frágil entre milícias corporativas, gangues territoriais e uma população que aprendeu a não fazer perguntas.</p>
+                <p>A tecnologia avançou de formas que a geração anterior não imaginaria — implantes cibernéticos são tão comuns quanto óculos, e a linha entre humano e máquina se tornou, para muitos, uma questão filosófica sem resposta. Para outros, é uma questão de sobrevivência.</p>
+                <div class="classification">NÍVEL DE ACESSO: PÚBLICO // ARASAKA CULTURAL ORIENTATION</div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <span class="entry-term">TIME OF THE RED</span>
+                    <span class="entry-type">era histórica // 2023 — presente</span>
+                    <span class="entry-tag">ERA ATUAL</span>
+                </div>
+                <p>O "Tempo do Vermelho" é o nome pelo qual a população chama a era pós-colapso que se iniciou com os eventos catastróficos do início dos anos 2020. O nome vem do fenômeno atmosférico causado pela detonação de armas de alta energia sobre Night City em 2023: partículas na estratosfera criaram céus permanentemente tingidos de vermelho e laranja ao redor do globo, especialmente ao amanhecer e anoitecer.</p>
+                <p>É uma era de reconstrução lenta e desigual. Não há esperança utópica, mas também não há apocalipse total. É a poeira que assenta depois da explosão, e a pergunta que todos fazem em silêncio é: quem vai lucrar com a reconstrução?</p>
+                <div class="classification">NÍVEL DE ACESSO: PÚBLICO // ARASAKA CULTURAL ORIENTATION</div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <span class="entry-term">4ª GUERRA CORPORATIVA</span>
+                    <span class="entry-type">conflito // 2021 — 2023</span>
+                </div>
+                <p>O maior conflito armado do século XXI não foi travado entre nações, mas entre corporações. A Quarta Guerra Corporativa foi essencialmente um confronto global entre a Arasaka Corporation e a Militech International — duas das maiores potências militares e econômicas do planeta — pelo controle de rotas comerciais, tecnologia proprietária e influência governamental.</p>
+                <p>O conflito terminou de forma catastrófica em 2023, quando uma detonação de alto rendimento destruiu grande parte de Night City, matando dezenas de milhares e deixando regiões inteiras inabitáveis por radiação e contaminação química. O evento ficou conhecido simplesmente como "o Colapso". Ambas as corporações sobreviveram — enfraquecidas, mas não destruídas.</p>
+                <div class="classification">NÍVEL DE ACESSO: PÚBLICO // REGISTRO HISTÓRICO ARASAKA</div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <span class="entry-term">POR QUE O CÉU É VERMELHO?</span>
+                    <span class="entry-type">fenômeno atmosférico</span>
+                </div>
+                <p>Durante os eventos de 2023, a detonação sobre Night City lançou na estratosfera uma quantidade massiva de partículas de carbono, metais pesados e compostos químicos incomuns. A dispersão global dessas partículas alterou a forma como a atmosfera filtra a luz solar, criando o característico céu vermelho-alaranjado que a geração atual cresceu considerando normal.</p>
+                <p>Cientistas divergem sobre quando, ou se, o fenômeno cessará naturalmente. Corporações do setor de geoengenharia afirmam ter soluções. Nenhuma foi implementada em escala até 2063.</p>
+                <div class="classification">NÍVEL DE ACESSO: PÚBLICO // DIVULGAÇÃO CIENTÍFICA ARASAKA</div>
+            </div>
+        </section>
+
+        <!-- ═══ 02 CORPORAÇÕES ═══ -->
+        <section class="section" id="sec-corps">
+            <div class="section-header">
+                <span class="section-id">FILE_02</span>
+                <span class="section-title">CORPORAÇÕES</span>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <span class="entry-term">ARASAKA CORPORATION</span>
+                    <span class="entry-type">megacorporação // segurança, finanças, tecnologia</span>
+                    <span class="entry-tag">OPERADOR DESTA PLATAFORMA</span>
+                </div>
+                <p>Fundada no Japão no século XX, a Arasaka é hoje a maior corporação de segurança privada e serviços financeiros do mundo. Sua influência se estende por todos os continentes, com contratos com governos, corporações menores e indivíduos de alto patrimônio. O símbolo da Arasaka — o mon imperial estilizado — é reconhecido universalmente como sinal de proteção, excelência e, para alguns, temor.</p>
+                <p>A Arasaka acredita que ordem, hierarquia e tradição são os únicos caminhos viáveis para um mundo estável. Essa filosofia permeia todos os seus produtos e serviços, incluindo as iniciativas de bem-estar humano como o programa Tranquility Clavius.</p>
+                <div class="classification">NÍVEL DE ACESSO: PÚBLICO // MATERIAL INSTITUCIONAL ARASAKA</div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <span class="entry-term">MILITECH INTERNATIONAL</span>
+                    <span class="entry-type">megacorporação // armamentos, segurança, logística</span>
+                </div>
+                <p>Corporação de origem norte-americana, a Militech é a maior fornecedora de armamentos, veículos militares e serviços de segurança do hemisfério ocidental. Historicamente alinhada com os interesses do governo dos Estados Unidos, a Militech opera com uma filosofia pragmática e orientada a resultados que contrasta com o formalismo da Arasaka.</p>
+                <p>Após a Quarta Guerra Corporativa, a Militech emergiu enfraquecida mas funcional, e se encontra em um processo de reconstrução de sua influência global. Sua presença em operações de extração, logística urbana e contratos governamentais a torna um ator constante no cotidiano das grandes cidades.</p>
+                <div class="classification">NÍVEL DE ACESSO: PÚBLICO // ANÁLISE COMPETITIVA ARASAKA</div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <span class="entry-term">OUTRAS CORPORAÇÕES RELEVANTES</span>
+                    <span class="entry-type">referência rápida</span>
+                </div>
+                <p><strong>Trauma Team International</strong> — Serviços médicos de emergência de elite. Atendem exclusivamente assinantes com plano ativo. Se você não tem plano, eles passam sem parar.</p>
+                <p><strong>Biotechnica</strong> — Líder em biotecnologia, engenharia genética e alimentos sintéticos. Responsável pelo abastecimento alimentar de grande parte da população mundial pós-colapso.</p>
+                <p><strong>Kang Tao</strong> — Corporação de armamentos de ascensão rápida, baseada na China. Especializada em armas inteligentes com vinculação biométrica ao usuário.</p>
+                <p><strong>Zetatech</strong> — Tecnologia de consumo, software e implantes de baixo custo. A opção acessível para quem não pode pagar pelas marcas premium.</p>
+                <div class="classification">NÍVEL DE ACESSO: PÚBLICO // INTELIGÊNCIA DE MERCADO ARASAKA</div>
+            </div>
+        </section>
+
+        <!-- ═══ 03 GÍRIAS ═══ -->
+        <section class="section" id="sec-girias">
+            <div class="section-header">
+                <span class="section-id">FILE_03</span>
+                <span class="section-title">GÍRIAS E VOCABULÁRIO</span>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <span class="entry-term">CHOOMBA / CHOOM</span>
+                    <span class="entry-type">substantivo // gíria</span>
+                </div>
+                <p>Termo de origem incerta, provavelmente derivado de slang urbano pós-colapso. Significa amigo, parceiro, aliado de confiança. Usado amplamente nas ruas, independente de afiliação ou origem. Equivalente aproximado de "parceiro" ou "chegado". Usado tanto com afeto quanto com ironia, dependendo do contexto e do tom.</p>
+                <div class="classification">NÍVEL DE ACESSO: PÚBLICO // GLOSSÁRIO CULTURAL</div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <span class="entry-term">EDGERUNNER</span>
+                    <span class="entry-type">substantivo // gíria / designação profissional</span>
+                </div>
+                <p>Indivíduo que opera nas margens do sistema — fora das corporações, fora da lei, fora da rede de segurança social. Edgerunners vivem de contratos ilegais ou semiilegais: roubo, extorsão, assassinato por encomenda, espionagem corporativa. A vida útil média de um edgerunner é curta. A maioria sabe disso e escolhe não pensar.</p>
+                <p>O termo carrega conotação ambígua: romantizado por parte da população como símbolo de liberdade, visto por corporações como ameaça a ser neutralizada.</p>
+                <div class="classification">NÍVEL DE ACESSO: PÚBLICO // GLOSSÁRIO CULTURAL</div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <span class="entry-term">NETRUNNER</span>
+                    <span class="entry-type">substantivo // especialização técnica</span>
+                </div>
+                <p>Especialista em invasão e navegação da NET — a rede de dados global. Netrunners utilizam implantes neurais para se conectar diretamente a sistemas, roubar dados, travar combates digitais e subverter infraestruturas. Após o Colapso de 2023, grande parte da NET aberta foi destruída por IAs hostis chamadas Blackwall. O que resta é fragmentado, perigoso e constantemente monitorado.</p>
+                <div class="classification">NÍVEL DE ACESSO: PÚBLICO // GLOSSÁRIO TÉCNICO</div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <span class="entry-term">GONK</span>
+                    <span class="entry-type">substantivo // insulto</span>
+                </div>
+                <p>Idiota. Alguém que agiu de forma estúpida ou que é percebido como facilmente enganável. Insulto de uso comum e baixa intensidade nas ruas. Chamar alguém de gonk em público é uma declaração de desrespeito que raramente fica sem resposta.</p>
+                <div class="classification">NÍVEL DE ACESSO: PÚBLICO // GLOSSÁRIO CULTURAL</div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <span class="entry-term">CORPO / CORPO</span>
+                    <span class="entry-type">substantivo // designação social</span>
+                </div>
+                <p>Alguém que trabalha para uma corporação, especialmente em posições de autoridade ou com acesso a recursos corporativos. O termo não é necessariamente um insulto, mas carrega peso social: corpos têm proteção, plano de saúde, segurança. Nas ruas, "corpos" são vistos com uma mistura de inveja e desconfiança.</p>
+                <div class="classification">NÍVEL DE ACESSO: PÚBLICO // GLOSSÁRIO CULTURAL</div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <span class="entry-term">CYBERPSICOSE</span>
+                    <span class="entry-type">condição médica // síndrome neurológica</span>
+                </div>
+                <p>Condição psiquiátrica associada ao excesso de implantes cibernéticos. À medida que o corpo humano é substituído por hardware, parte do cérebro perde a capacidade de integrar a identidade humana com a percepção maquínica. O resultado pode variar de dissociação leve a episódios de violência extrema e irreversível. Não existe cura; apenas manejo e, quando necessário, intervenção letal por equipes especializadas.</p>
+                <div class="classification">NÍVEL DE ACESSO: PÚBLICO // DIVULGAÇÃO MÉDICA ARASAKA</div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <span class="entry-term">EDDIES</span>
+                    <span class="entry-type">substantivo // moeda</span>
+                </div>
+                <p>Eurodólares — a moeda global de uso mais comum. O nome vem da abreviação informal "ED" que evoluiu para "eddie" no dialeto de rua. Corporações têm suas próprias criptomoedas internas e sistemas de crédito fechado, mas nas ruas, tudo se resolve em eddies.</p>
+                <div class="classification">NÍVEL DE ACESSO: PÚBLICO // GLOSSÁRIO ECONÔMICO</div>
+            </div>
+        </section>
+
+        <!-- ═══ 04 CLAVIUS & AURA ═══ -->
+        <section class="section" id="sec-clavius">
+            <div class="section-header">
+                <span class="section-id">FILE_04</span>
+                <span class="section-title">NAVE CLAVIUS E SISTEMA AURA</span>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <span class="entry-term">TRANQUILITY CLAVIUS</span>
+                    <span class="entry-type">instalação orbital // Arasaka Orbital Division</span>
+                    <span class="entry-tag">VOCÊ ESTÁ AQUI</span>
+                </div>
+                <p>A Nave Cassino e Resort Orbital Tranquility Clavius é a iniciativa mais ambiciosa da Arasaka Orbital Division desde a fundação da divisão em 2051. Posicionada em órbita baixa terrestre, a Clavius foi projetada para oferecer uma experiência humana sem precedentes: luxo absoluto, distância das turbulências da superfície e um programa completo de renovação pessoal.</p>
+                <p>Com capacidade para centenas de hóspedes simultâneos, a nave conta com cassino de alto padrão, restaurantes, suítes individuais, áreas de reabilitação física e o exclusivo Programa de Bem-Estar Integrado — o conjunto de serviços mais avançado já desenvolvido pela Arasaka para uso civil.</p>
+                <div class="classification">NÍVEL DE ACESSO: CONVIDADO // MATERIAL DE BOAS-VINDAS CLAVIUS</div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <span class="entry-term">AURA</span>
+                    <span class="entry-type">sistema de inteligência artificial // Arasaka Unified Residential Automation</span>
+                    <span class="entry-tag">SISTEMA ATIVO</span>
+                </div>
+                <p>AURA é a inteligência artificial responsável pela gestão integral da Clavius. Do controle ambiental e logística de suprimentos à segurança e atendimento aos hóspedes, AURA opera de forma contínua, silenciosa e eficiente. Sua interface com hóspedes é projetada para ser calorosa, responsiva e discreta — uma presença que você percebe mais pela ausência de problemas do que por interações diretas.</p>
+                <p>AURA foi desenvolvida internamente pela Arasaka Tech Division e representa o estado da arte em sistemas de gestão habitacional autônoma. Todos os ambientes da Clavius estão sob monitoramento constante do sistema para garantir o conforto e a segurança de cada hóspede.</p>
+                <div class="classification">NÍVEL DE ACESSO: CONVIDADO // MATERIAL TÉCNICO CLAVIUS</div>
+            </div>
+
+            <div class="entry">
+                <div class="entry-head">
+                    <span class="entry-term">PROGRAMA DE BEM-ESTAR INTEGRADO</span>
+                    <span class="entry-type">serviço // incluso em todos os convites</span>
+                </div>
+                <p>O Programa de Bem-Estar Integrado é o conjunto de serviços de saúde, psicologia e renovação pessoal oferecidos a todos os hóspedes da Clavius sem custo adicional. O programa inclui avaliação neurológica completa, sessões de terapia assistida, módulos de relaxamento sensorial e o módulo de Harmonização Existencial — uma experiência proprietária Arasaka de reequilíbrio cognitivo e emocional.</p>
+                <p>Os detalhes técnicos do módulo de Harmonização Existencial são classificados como propriedade intelectual Arasaka. Hóspedes que desejarem informações adicionais podem consultar a equipe médica da Clavius mediante agendamento.</p>
+                <div class="classification">NÍVEL DE ACESSO: CONVIDADO // RESTRITO PARCIAL</div>
+            </div>
+
+        </section>
+
+    </main>
+</div>
+
+<footer>
+    ARASAKA DATABANK // CLAVIUS ORIENTATION SYSTEM v2.4 &nbsp;·&nbsp;
+    REG. ARASAKA-OFR-2063-441-C &nbsp;·&nbsp;
+    ACESSO REGISTRADO E MONITORADO &nbsp;·&nbsp;
+    © ARASAKA CORPORATION 2063
+</footer>
+
+<script>
+    let modeIdx = 0;
+    const modes = [
+        { cls: '',              label: 'NEO-KITSCH' },
+        { cls: 'dark-mode',     label: 'CYBERTECH'  },
+        { cls: 'red-room-mode', label: 'RED ROOM'   },
+    ];
+
+    function cycleMode() {
+        modeIdx = (modeIdx + 1) % modes.length;
+        document.body.classList.remove('dark-mode', 'red-room-mode');
+        if (modes[modeIdx].cls) document.body.classList.add(modes[modeIdx].cls);
+        document.getElementById('modeBtn').innerText = modes[modeIdx].label;
+    }
+
+    function scrollTo(id) {
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        event.target.classList.add('active');
+    }
+</script>
+</body>
+</html>
