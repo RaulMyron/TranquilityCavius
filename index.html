@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRANQUILITY CLAVIUS | Welcome Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Montserrat:wght@200;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-white: #f5f5f7;
+            --accent-gold: #d4af37;
+            --error-red: #8b0000;
+            --text-dark: #1a1a1a;
+            --overlay-red: rgba(139, 0, 0, 0.1);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-white);
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            height: 100%;
+            overflow-x: hidden;
+            transition: background-color 3s ease; /* Transição suave para o vermelho */
+        }
+
+        /* Efeito de Scanline - Retrofuturismo / 2001 */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.03) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.01), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.01));
+            z-index: 10;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 5;
+        }
+
+        header {
+            border-bottom: 1px solid var(--accent-gold);
+            padding-bottom: 20px;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 12px;
+            font-size: 2rem;
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .status-bar {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent-gold);
+            margin-top: 15px;
+        }
+
+        .hero-text {
+            font-weight: 200;
+            line-height: 2;
+            font-size: 1.1rem;
+            margin-bottom: 60px;
+            letter-spacing: 1px;
+        }
+
+        .invitation-box {
+            border: 1px solid #e0e0e0;
+            padding: 50px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.03);
+            transition: 0.5s;
+        }
+
+        .invitation-box:hover {
+            border-color: var(--accent-gold);
+        }
+
+        .role-type {
+            font-weight: 700;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .button {
+            display: inline-block;
+            margin-top: 50px;
+            padding: 18px 50px;
+            border: 1px solid var(--text-dark);
+            text-decoration: none;
+            color: var(--text-dark);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            transition: all 0.5s ease;
+            cursor: pointer;
+            background: none;
+        }
+
+        .button:hover {
+            background-color: var(--text-dark);
+            color: white;
+            letter-spacing: 6px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        footer {
+            margin-top: 120px;
+            font-size: 0.55rem;
+            opacity: 0.4;
+            letter-spacing: 2px;
+            line-height: 1.6;
+        }
+
+        /* Classes de animação via JS */
+        .system-alert {
+            background-color: #fff0f0 !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>TRANQUILITY CLAVIUS</h1>
+        <div class="status-bar">LOCAÇÃO ORBITAL ARASAKA | PROTOCOLO DE AMNÉSIA REVERSA: ATIVO</div>
+    </header>
+
+    <main>
+        <p class="hero-text">
+            O silêncio é o maior luxo da pós-modernidade.<br>
+            Em Clavius, sua identidade é lapidada pela eficiência e pelo prazer estéril.
+        </p>
+
+        <div class="invitation-box" id="box">
+            <span class="role-type">Aptidão Biopsicossocial Detectada</span>
+            <p>Seu perfil neural foi selecionado para preencher uma lacuna vital em nossa estrutura.</p>
+            <p style="font-size: 0.85rem; opacity: 0.7; max-width: 500px; margin: 20px auto;">
+                Contrato de Locação Vitalícia: O indivíduo cede seus direitos de memória e função biológica em troca de estabilidade perpétua em ambiente otimizado.
+            </p>
+            <p style="margin-top: 30px; font-size: 0.7rem; letter-spacing: 2px; color: var(--accent-gold);">
+                "O FUTURO É BRANCO. O DESTINO É OURO."
+            </p>
+        </div>
+
+        <button class="button" onclick="iniciarExperiencia()">ACEITAR CONVITE</button>
+    </main>
+
+    <footer>
+        SISTEMA OPERACIONAL AURA v.8.4.1 [HABILITADO]<br>
+        AVISO: O FECHAMENTO DESTA ABA NÃO CANCELA A SINCRONIZAÇÃO NEURAL EM ANDAMENTO.
+    </footer>
+</div>
+
+<audio id="jazzAudio" loop preload="auto">
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    function iniciarExperiencia() {
+        const audio = document.getElementById('jazzAudio');
+        const body = document.body;
+        const box = document.getElementById('box');
+        
+        // 1. Iniciar música com fade-in suave
+        audio.volume = 0;
+        audio.play();
+        let vol = 0;
+        let fadeInterval = setInterval(() => {
+            if (vol < 0.3) {
+                vol += 0.05;
+                audio.volume = vol;
+            } else {
+                clearInterval(fadeInterval);
+            }
+        }, 200);
+
+        // 2. Transição Visual para o "Vermelho Bioshock/2001"
+        body.classList.add('system-alert');
+        box.style.borderColor = "#8b0000";
+        
+        // 3. Alerta Narrativo
+        setTimeout(() => {
+            alert('SINCRONIZAÇÃO INICIADA.\n\nIdentidade anterior: [DELETANDO...]\nDestino: Tranquility Clavius.\n\n"Por favor, mantenha os olhos fixos no ponto branco e respire fundo."');
+        }, 1000);
+    }
+</script>
+
+</body>
+</html>
